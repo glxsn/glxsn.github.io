@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文章详情 | 给力小少年</title>
+    <style>
+        /* 保持与主站一致的样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        :root {
+            --primary: #6C8EBF;
+            --secondary: #D9C7B8;
+            --text: #333333;
+            --light: #F5F5F5;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 0 20px;
+        }
+        
+        header {
+            padding: 30px 0;
+            text-align: center;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        nav a {
+            color: var(--text);
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+        
+        nav a:hover {
+            color: var(--primary);
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            font-weight: 300;
+            text-align: center;
+        }
+        
+        /* 文章卡片样式 */
+        .article-card {
+            background: white;
+            padding: 40px;
+            margin-bottom: 30px;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .article-title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+            text-align: center;
+        }
+        
+        .article-meta {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+        }
+        
+        .article-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        
+        .article-content p {
+            margin-bottom: 20px;
+        }
+        
+        /* 返回按钮 */
+        .back-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 30px;
+            transition: background-color 0.3s;
+        }
+        
+        .back-btn:hover {
+            background-color: #5a7aab;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #999;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            nav a {
+                display: block;
+                margin: 10px 0;
+            }
+            
+            .article-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html">首页</a>
+            <a href="about.html">关于</a>
+            <a href="works.html">作品</a>
+            <a href="contact.html">联系</a>
+        </nav>
+    </header>
+    
+    <div class="container">
+        <div class="article-card">
+            <h1 class="article-title">文章标题</h1>
+            <div class="article-meta">
+                发布日期：2023年10月15日 | 作者：给力小少年
+            </div>
+            <div class="article-content">
+                <!-- 在这里插入您的文章内容 -->
+                <p>这里是文章的引言部分...</p>
+                
+                <h2>第一章</h2>
+                <p>这里是第一章的内容...</p>
+                
+                <h2>第二章</h2>
+                <p>这里是第二章的内容...</p>
+                
+                <p>这里是文章的结尾部分...</p>
+            </div>
+            
+            <a href="index.html" class="back-btn">返回首页</a>
+        </div>
+    </div>
+    
+    <footer>
+        <p>© 2023 给力小少年 | 知识分享</p>
+    </footer>
+</body>
+</html>
