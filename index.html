@@ -1,1 +1,127 @@
-<h1>第一步！
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简·空间</title>
+    <style>
+        /* 基础样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        /* 配色方案 */
+        :root {
+            --primary: #6C8EBF;  /* 柔和的蓝灰色 */
+            --secondary: #D9C7B8; /* 米白色 */
+            --text: #333333;     /* 深灰文字 */
+            --light: #F5F5F5;    /* 浅灰背景 */
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 0 20px;
+        }
+        
+        /* 导航栏 */
+        header {
+            padding: 30px 0;
+            text-align: center;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        nav a {
+            color: var(--text);
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+        
+        nav a:hover {
+            color: var(--primary);
+        }
+        
+        /* 主要内容区 */
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            font-weight: 300;
+            text-align: center;
+        }
+        
+        p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+        
+        /* 卡片式内容区块 */
+        .card {
+            background: white;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        /* 页脚 */
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #999;
+            font-size: 14px;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            nav a {
+                display: block;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="#">首页</a>
+            <a href="#">关于</a>
+            <a href="#">作品</a>
+            <a href="#">联系</a>
+        </nav>
+    </header>
+    
+    <div class="container">
+        <h1>简约 · 留白 · 呼吸感</h1>
+        
+        <div class="card">
+            <h2>设计理念</h2>
+            <p>少即是多。我们相信通过精简元素、合理留白和精心选择的配色，可以创造更有力量的视觉表达。</p>
+        </div>
+        
+        <div class="card">
+            <h2>精选作品</h2>
+            <p>探索我们以用户为中心的设计案例，每个项目都贯彻极简主义哲学。</p>
+        </div>
+    </div>
+    
+    <footer>
+        <p>© 2023 简·空间 | 追求本质之美</p>
+    </footer>
+</body>
+</html>
