@@ -13,16 +13,16 @@
             font-family: 'Helvetica Neue', Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
         }
         
-        /* 配色方案 - 更加柔和的色调 */
+        /* 配色方案 */
         :root {
-            --primary: #7D9DCA;  /* 更明亮的蓝灰色 */
-            --primary-light: #E1E9F5; /* 浅蓝色 */
-            --secondary: #E8D8C5; /* 更温暖的米白色 */
-            --text: #3A3A3A;     /* 深灰文字 */
-            --text-light: #666666; /* 浅灰色文字 */
-            --light: #FAFAFA;    /* 更白的背景 */
-            --card-bg: #FFFFFF;  /* 卡片背景 */
-            --highlight: #FF7E67; /* 强调色 - 珊瑚色 */
+            --primary: #7D9DCA;
+            --primary-light: #E1E9F5;
+            --secondary: #E8D8C5;
+            --text: #3A3A3A;
+            --text-light: #666666;
+            --light: #FAFAFA;
+            --card-bg: #FFFFFF;
+            --highlight: #FF7E67;
         }
         
         body {
@@ -35,7 +35,7 @@
             flex-direction: column;
         }
         
-        /* 导航栏 - 更圆润的设计 */
+        /* 导航栏 */
         header {
             padding: 25px 0;
             text-align: center;
@@ -52,6 +52,7 @@
             display: flex;
             justify-content: center;
             gap: 25px;
+            position: relative; /* 为搜索框定位做准备 */
         }
         
         nav a {
@@ -65,13 +66,11 @@
             overflow: hidden;
         }
         
-        /* 导航栏悬停效果 */
         nav a:hover {
             color: var(--primary);
             background-color: var(--primary-light);
         }
         
-        /* 当前选中项效果 */
         nav a.active {
             color: white;
             background-color: var(--primary);
@@ -79,7 +78,6 @@
             box-shadow: 0 4px 12px rgba(125, 157, 202, 0.3);
         }
         
-        /* 导航栏下划线动画 */
         nav a::after {
             content: '';
             position: absolute;
@@ -100,6 +98,55 @@
         nav a.active::after {
             width: 80%;
             background-color: white;
+        }
+        
+        /* 搜索框样式 */
+        .search-container {
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+        }
+        
+        .search-input {
+            padding: 10px 15px;
+            border: 2px solid var(--secondary);
+            border-radius: 50px;
+            outline: none;
+            font-size: 14px;
+            width: 200px;
+            transition: all 0.3s ease;
+            background-color: var(--light);
+        }
+        
+        .search-input:focus {
+            border-color: var(--primary);
+            width: 250px;
+        }
+        
+        .search-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            margin-left: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .search-btn:hover {
+            background-color: var(--highlight);
+            transform: scale(1.05);
         }
         
         /* 主要内容区 */
@@ -133,7 +180,7 @@
             border-radius: 3px;
         }
         
-        /* 卡片式内容区块 - 更圆润的设计 */
+        /* 卡片式内容区块 */
         .card {
             background: var(--card-bg);
             padding: 40px;
@@ -175,7 +222,7 @@
             line-height: 1.8;
         }
         
-        /* 页脚 - 圆润设计 */
+        /* 页脚 */
         footer {
             text-align: center;
             padding: 30px 0;
@@ -202,11 +249,27 @@
                 flex-direction: column;
                 gap: 10px;
                 align-items: center;
+                padding-bottom: 60px; /* 为搜索框留空间 */
             }
             
             nav a {
                 width: 80%;
                 text-align: center;
+            }
+            
+            .search-container {
+                position: static;
+                transform: none;
+                margin: 15px auto;
+                width: 90%;
+            }
+            
+            .search-input {
+                width: 100%;
+            }
+            
+            .search-input:focus {
+                width: 100%;
             }
             
             .container {
@@ -226,6 +289,17 @@
             <a href="bi.html">关于</a>
             <a href="dh.html">作品</a>
             <a href="#">联系</a>
+            
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="搜索文章...">
+                    <button class="search-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
         </nav>
     </header>
     
@@ -258,13 +332,33 @@
     </footer>
     
     <script>
-        // 简单的导航栏选中效果
+        // 导航栏选中效果
         document.querySelectorAll('nav a').forEach(link => {
             link.addEventListener('click', function() {
                 document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
                 this.classList.add('active');
             });
         });
+        
+        // 搜索功能
+        const searchInput = document.querySelector('.search-input');
+        const searchBtn = document.querySelector('.search-btn');
+        
+        searchBtn.addEventListener('click', performSearch);
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+        
+        function performSearch() {
+            const query = searchInput.value.trim();
+            if (query) {
+                alert('搜索功能演示: ' + query);
+                // 实际使用时替换为:
+                // window.location.href = '/search?q=' + encodeURIComponent(query);
+            }
+        }
     </script>
 </body>
 </html>
