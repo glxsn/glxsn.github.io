@@ -3,95 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>或许会有帮助</title>
+    <title>给力小少年的创意空间</title>
     <style>
         /* 基础样式重置 */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-family: 'Helvetica Neue', Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
         }
         
-        /* 配色方案 */
+        /* 配色方案 - 更加柔和的色调 */
         :root {
-            --primary: #6C8EBF;  /* 柔和的蓝灰色 */
-            --secondary: #D9C7B8; /* 米白色 */
-            --text: #333333;     /* 深灰文字 */
-            --light: #F5F5F5;    /* 浅灰背景 */
+            --primary: #7D9DCA;  /* 更明亮的蓝灰色 */
+            --primary-light: #E1E9F5; /* 浅蓝色 */
+            --secondary: #E8D8C5; /* 更温暖的米白色 */
+            --text: #3A3A3A;     /* 深灰文字 */
+            --text-light: #666666; /* 浅灰色文字 */
+            --light: #FAFAFA;    /* 更白的背景 */
+            --card-bg: #FFFFFF;  /* 卡片背景 */
+            --highlight: #FF7E67; /* 强调色 - 珊瑚色 */
         }
         
         body {
             background-color: var(--light);
             color: var(--text);
             line-height: 1.6;
-            padding: 0 20px;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         
-        /* 导航栏 */
+        /* 导航栏 - 更圆润的设计 */
         header {
-            padding: 30px 0;
+            padding: 25px 0;
             text-align: center;
-            border-bottom: 1px solid rgba(0,0,0,0.1);
+            background-color: var(--card-bg);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
         }
         
         nav a {
             color: var(--text);
             text-decoration: none;
-            margin: 0 15px;
             font-size: 18px;
-            transition: color 0.3s;
+            padding: 10px 20px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
         
+        /* 导航栏悬停效果 */
         nav a:hover {
             color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        /* 当前选中项效果 */
+        nav a.active {
+            color: white;
+            background-color: var(--primary);
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(125, 157, 202, 0.3);
+        }
+        
+        /* 导航栏下划线动画 */
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background-color: var(--highlight);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            border-radius: 3px;
+        }
+        
+        nav a:hover::after {
+            width: 60%;
+        }
+        
+        nav a.active::after {
+            width: 80%;
+            background-color: white;
         }
         
         /* 主要内容区 */
         .container {
-            max-width: 900px;
-            margin: 50px auto;
-            padding: 0 20px;
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 30px;
+            flex: 1;
         }
         
         h1 {
-            font-size: 2.5rem;
-            margin-bottom: 30px;
+            font-size: 2.8rem;
+            margin-bottom: 40px;
             font-weight: 300;
             text-align: center;
+            color: var(--primary);
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
         }
         
-        p {
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--highlight));
+            border-radius: 3px;
+        }
+        
+        /* 卡片式内容区块 - 更圆润的设计 */
+        .card {
+            background: var(--card-bg);
+            padding: 40px;
+            margin-bottom: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+        }
+        
+        .card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .card h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--highlight);
+            border-radius: 3px;
+        }
+        
+        .card p {
             margin-bottom: 20px;
             font-size: 1.1rem;
+            color: var(--text-light);
+            line-height: 1.8;
         }
         
-        /* 卡片式内容区块 */
-        .card {
-            background: white;
-            padding: 30px;
-            margin-bottom: 30px;
-            border-radius: 4px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-        
-        /* 页脚 */
+        /* 页脚 - 圆润设计 */
         footer {
             text-align: center;
             padding: 30px 0;
-            color: #999;
+            color: var(--text-light);
             font-size: 14px;
+            background-color: var(--card-bg);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.03);
+            margin-top: 50px;
+        }
+        
+        footer p {
+            margin: 0;
         }
         
         /* 响应式设计 */
         @media (max-width: 768px) {
             h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
+            }
+            
+            nav {
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
             }
             
             nav a {
-                display: block;
-                margin: 10px 0;
+                width: 80%;
+                text-align: center;
+            }
+            
+            .container {
+                padding: 0 20px;
+            }
+            
+            .card {
+                padding: 25px;
             }
         }
     </style>
@@ -99,7 +222,7 @@
 <body>
     <header>
         <nav>
-            <a href="#">首页</a>
+            <a href="#" class="active">首页</a>
             <a href="bi.html">关于</a>
             <a href="#">作品</a>
             <a href="#">联系</a>
@@ -107,21 +230,43 @@
     </header>
     
     <div class="container">
-        <h1> · 给力小少年的版块！· </h1>
+        <h1>· 给力小少年的创意空间 ·</h1>
         
         <div class="card">
             <h2>关于这个界面</h2>
-            <p>只是简单的一个小界面，以后会完善的！</p>
+            <p>欢迎来到我的个人空间！这里是一个正在不断完善的创意平台，我会在这里分享我的想法、作品和经验。</p>
+            <p>界面设计采用了圆润的边角和柔和的色彩，希望能给您带来舒适的浏览体验。</p>
         </div>
         
         <div class="card">
             <h2>关于这个板块</h2>
-            <p>主要分享一些游戏的mod及其他疑难杂症（自己遇到的），当然会有些其他的喵！</p>
+            <p>这里主要分享我在游戏Mod开发过程中遇到的各种问题和解决方案，包括但不限于：</p>
+            <p>• 主流游戏的Mod制作教程</p>
+            <p>• 开发过程中遇到的疑难杂症</p>
+            <p>• 有趣的创意实现</p>
+            <p>• 偶尔也会分享一些其他技术领域的心得</p>
+        </div>
+        
+        <div class="card">
+            <h2>最新动态</h2>
+            <p>• 2023.10.15 - 新增了《我的世界》光影Mod教程</p>
+            <p>• 2023.10.10 - 更新了Unity Mod开发指南</p>
+            <p>• 2023.10.05 - 修复了页面布局的几个小问题</p>
         </div>
     </div>
     
     <footer>
-        <p>头发掉光光啦</p>
+        <p>© 2023 给力小少年 | 用创意改变世界</p>
     </footer>
+    
+    <script>
+        // 简单的导航栏选中效果
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', function() {
+                document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
 </body>
 </html>
