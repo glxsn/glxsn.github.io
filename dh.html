@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>博客目录 | 给力小少年</title>
+    <style>
+        /* 基础样式重置 - 与主页一致 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+        
+        /* 配色方案 - 与主页一致 */
+        :root {
+            --primary: #7D9DCA;
+            --primary-light: #E1E9F5;
+            --secondary: #E8D8C5;
+            --text: #3A3A3A;
+            --text-light: #666666;
+            --light: #FAFAFA;
+            --card-bg: #FFFFFF;
+            --highlight: #FF7E67;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 导航栏 - 与主页一致 */
+        header {
+            padding: 25px 0;
+            text-align: center;
+            background-color: var(--card-bg);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+        }
+        
+        nav a {
+            color: var(--text);
+            text-decoration: none;
+            font-size: 18px;
+            padding: 10px 20px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        nav a:hover {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        nav a.active {
+            color: white;
+            background-color: var(--primary);
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(125, 157, 202, 0.3);
+        }
+        
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background-color: var(--highlight);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            border-radius: 3px;
+        }
+        
+        nav a:hover::after {
+            width: 60%;
+        }
+        
+        nav a.active::after {
+            width: 80%;
+            background-color: white;
+        }
+        
+        /* 主要内容区 */
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 30px;
+            flex: 1;
+        }
+        
+        .page-title {
+            font-size: 2.8rem;
+            margin-bottom: 40px;
+            font-weight: 300;
+            text-align: center;
+            color: var(--primary);
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .page-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--highlight));
+            border-radius: 3px;
+        }
+        
+        /* 文章目录卡片 */
+        .article-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .article-item {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .article-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+        }
+        
+        .article-item h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            flex-grow: 1;
+        }
+        
+        .article-item .meta {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .article-item .excerpt {
+            margin-bottom: 20px;
+            color: var(--text);
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+        
+        .read-more {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            align-self: flex-start;
+            font-size: 0.9rem;
+        }
+        
+        .read-more:hover {
+            background-color: #6a8fc1;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(125, 157, 202, 0.3);
+        }
+        
+        /* 分类筛选 */
+        .category-filter {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .category-btn {
+            padding: 8px 20px;
+            background-color: var(--light);
+            color: var(--text);
+            border: 1px solid var(--secondary);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .category-btn:hover, .category-btn.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        /* 页脚 - 与主页一致 */
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--text-light);
+            font-size: 14px;
+            background-color: var(--card-bg);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.03);
+            margin-top: 50px;
+        }
+        
+        footer p {
+            margin: 0;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
+            }
+            
+            nav a {
+                width: 80%;
+                text-align: center;
+            }
+            
+            .container {
+                padding: 0 20px;
+            }
+            
+            .article-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-title {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html">首页</a>
+            <a href="#" class="active">博客</a>
+            <a href="#">作品</a>
+            <a href="#">联系</a>
+        </nav>
+    </header>
+    
+    <div class="container">
+        <h1 class="page-title">· 博客文章 ·</h1>
+        
+        <!-- 分类筛选 -->
+        <div class="category-filter">
+            <button class="category-btn active">全部</button>
+            <button class="category-btn">游戏MOD</button>
+            <button class="category-btn">技术分享</button>
+            <button class="category-btn">心得体会</button>
+            <button class="category-btn">其他</button>
+        </div>
+        
+        <!-- 文章目录 -->
+        <div class="article-list">
+            <!-- 文章1 -->
+            <div class="article-item">
+                <h2>关于关于</h2>
+                <div class="meta">2025年6月17日 | 分类: 心得体会</div>
+                <p class="excerpt">探讨我创建这个博客板块的初衷和思考过程，分享在互联网时代寻找答案的体验与观察...</p>
+                <a href="article-about.html" class="read-more">阅读全文</a>
+            </div>
+            
+            <!-- 文章2 -->
+            <div class="article-item">
+                <h2>Unity Mod开发入门指南</h2>
+                <div class="meta">2025年5月10日 | 分类: 游戏MOD</div>
+                <p class="excerpt">详细介绍Unity游戏Mod开发的基本流程和工具，适合初学者快速上手...</p>
+                <a href="article-unity-mod.html" class="read-more">阅读全文</a>
+            </div>
+            
+            <!-- 文章3 -->
+            <div class="article-item">
+                <h2>我的世界光影优化技巧</h2>
+                <div class="meta">2025年4月22日 | 分类: 游戏MOD</div>
+                <p class="excerpt">分享我在Minecraft中实现更好光影效果的实用技巧和配置方法...</p>
+                <a href="article-mc-shader.html" class="read-more">阅读全文</a>
+            </div>
+            
+            <!-- 文章4 -->
+            <div class="article-item">
+                <h2>Python自动化脚本实践</h2>
+                <div class="meta">2025年3月15日 | 分类: 技术分享</div>
+                <p class="excerpt">记录几个提高工作效率的Python自动化脚本开发经验和技巧...</p>
+                <a href="article-python-auto.html" class="read-more">阅读全文</a>
+            </div>
+            
+            <!-- 文章5 -->
+            <div class="article-item">
+                <h2>如何有效使用AI辅助编程</h2>
+                <div class="meta">2025年2月28日 | 分类: 技术分享</div>
+                <p class="excerpt">分享我在开发过程中如何合理使用AI工具提高效率而不被其限制的经验...</p>
+                <a href="article-ai-coding.html" class="read-more">阅读全文</a>
+            </div>
+            
+            <!-- 文章6 -->
+            <div class="article-item">
+                <h2>游戏Mod社区观察</h2>
+                <div class="meta">2025年1月10日 | 分类: 心得体会</div>
+                <p class="excerpt">对当前游戏Mod开发生态的一些观察和思考，探讨创作与分享的意义...</p>
+                <a href="article-mod-community.html" class="read-more">阅读全文</a>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>© 2025 给力小少年 | 知识分享</p>
+    </footer>
+    
+    <script>
+        // 导航栏选中效果
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', function() {
+                document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // 分类筛选功能
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                // 这里可以添加实际筛选逻辑
+                console.log('筛选分类:', this.textContent);
+            });
+        });
+    </script>
+</body>
+</html>
