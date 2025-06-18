@@ -3,128 +3,248 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>文章详情 | 给力小少年</title>
+    <title>关于关于 | 给力小少年</title>
     <style>
-        /* 保持与主站一致的样式 */
+        /* 基础样式重置 */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-family: 'Helvetica Neue', Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
         }
         
+        /* 配色方案 - 与主页一致 */
         :root {
-            --primary: #6C8EBF;
-            --secondary: #D9C7B8;
-            --text: #333333;
-            --light: #F5F5F5;
+            --primary: #7D9DCA;  /* 更明亮的蓝灰色 */
+            --primary-light: #E1E9F5; /* 浅蓝色 */
+            --secondary: #E8D8C5; /* 更温暖的米白色 */
+            --text: #3A3A3A;     /* 深灰文字 */
+            --text-light: #666666; /* 浅灰色文字 */
+            --light: #FAFAFA;    /* 更白的背景 */
+            --card-bg: #FFFFFF;  /* 卡片背景 */
+            --highlight: #FF7E67; /* 强调色 - 珊瑚色 */
         }
         
         body {
             background-color: var(--light);
             color: var(--text);
             line-height: 1.6;
-            padding: 0 20px;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         
+        /* 导航栏 - 与主页一致 */
         header {
-            padding: 30px 0;
+            padding: 25px 0;
             text-align: center;
-            border-bottom: 1px solid rgba(0,0,0,0.1);
+            background-color: var(--card-bg);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
         }
         
         nav a {
             color: var(--text);
             text-decoration: none;
-            margin: 0 15px;
             font-size: 18px;
-            transition: color 0.3s;
+            padding: 10px 20px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
         
         nav a:hover {
             color: var(--primary);
+            background-color: var(--primary-light);
         }
         
+        nav a.active {
+            color: white;
+            background-color: var(--primary);
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(125, 157, 202, 0.3);
+        }
+        
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background-color: var(--highlight);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            border-radius: 3px;
+        }
+        
+        nav a:hover::after {
+            width: 60%;
+        }
+        
+        nav a.active::after {
+            width: 80%;
+            background-color: white;
+        }
+        
+        /* 主要内容区 */
         .container {
-            max-width: 900px;
-            margin: 50px auto;
-            padding: 0 20px;
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 30px;
+            flex: 1;
         }
         
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 30px;
-            font-weight: 300;
-            text-align: center;
-        }
-        
-        /* 文章卡片样式 */
+        /* 文章卡片 - 圆润风格 */
         .article-card {
-            background: white;
-            padding: 40px;
-            margin-bottom: 30px;
-            border-radius: 4px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            background: var(--card-bg);
+            padding: 50px;
+            margin-bottom: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+        
+        .article-card:hover {
+            box-shadow: 0 12px 30px rgba(0,0,0,0.1);
         }
         
         .article-title {
-            font-size: 2rem;
+            font-size: 2.5rem;
             margin-bottom: 20px;
             color: var(--primary);
             text-align: center;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .article-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--highlight));
+            border-radius: 3px;
         }
         
         .article-meta {
-            color: #666;
+            color: var(--text-light);
             text-align: center;
-            margin-bottom: 30px;
-            font-size: 0.9rem;
+            margin-bottom: 40px;
+            font-size: 1rem;
         }
         
         .article-content {
             font-size: 1.1rem;
             line-height: 1.8;
+            color: var(--text);
         }
         
         .article-content p {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         
-        /* 返回按钮 */
+        .article-content h2 {
+            font-size: 1.8rem;
+            margin: 40px 0 20px;
+            color: var(--primary);
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .article-content h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--highlight);
+            border-radius: 3px;
+        }
+        
+        /* 返回按钮 - 圆润风格 */
         .back-btn {
             display: inline-block;
-            padding: 10px 20px;
+            padding: 12px 30px;
             background-color: var(--primary);
             color: white;
             text-decoration: none;
-            border-radius: 4px;
-            margin-top: 30px;
-            transition: background-color 0.3s;
+            border-radius: 50px;
+            margin-top: 40px;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(125, 157, 202, 0.3);
         }
         
         .back-btn:hover {
-            background-color: #5a7aab;
+            background-color: #6a8fc1;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(125, 157, 202, 0.4);
         }
         
+        .back-btn-container {
+            text-align: center;
+        }
+        
+        /* 页脚 - 与主页一致 */
         footer {
             text-align: center;
             padding: 30px 0;
-            color: #999;
+            color: var(--text-light);
             font-size: 14px;
+            background-color: var(--card-bg);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.03);
+            margin-top: 50px;
         }
         
+        footer p {
+            margin: 0;
+        }
+        
+        /* 响应式设计 */
         @media (max-width: 768px) {
-            h1 {
-                font-size: 2rem;
+            nav {
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
             }
             
             nav a {
-                display: block;
-                margin: 10px 0;
+                width: 80%;
+                text-align: center;
+            }
+            
+            .container {
+                padding: 0 20px;
             }
             
             .article-card {
-                padding: 20px;
+                padding: 30px;
+            }
+            
+            .article-title {
+                font-size: 2rem;
             }
         }
     </style>
@@ -133,7 +253,7 @@
     <header>
         <nav>
             <a href="index.html">首页</a>
-            <a href="#">关于</a>
+            <a href="#" class="active">关于</a>
             <a href="#">作品</a>
             <a href="#">联系</a>
         </nav>
@@ -146,11 +266,11 @@
                 发布日期：2025年6月17日 | 作者：给力小少年
             </div>
             <div class="article-content">
-                <!-- 在这里插入您的文章内容 -->
+                <!-- 保留原有文章内容 -->
                 <p>只是简单的聊聊</p>
                 
                 <h2>为什么会想做这个板块？</h2>
-                <p>使用电脑在互联网中冲浪，难免会遇到许多各式各样的问题。在ai使用门槛变低及其效果“猛地”变好之前，寻找问题答案的路总是坎坷且危险的，但这也塑造了一批善于思考、辨别是非的网民。
+                <p>使用电脑在互联网中冲浪，难免会遇到许多各式各样的问题。在ai使用门槛变低及其效果"猛地"变好之前，寻找问题答案的路总是坎坷且危险的，但这也塑造了一批善于思考、辨别是非的网民。
                 现在，ai的使用门槛大大降低，效果也比较不错，这使得越来越多的人依赖于ai，以至于认为ai是万能的。至此，我必须要说的是，ai在数据检索总结方面的效率确实令人惊叹，但其在创新性问题上
                 的效果实在是不行，在这类问题上让ai解答，它说了，但好像什么也没说。。。。有很多人认为创新和自己关系不大，认为其与科研相关的工作人员走得更近。但其实不然、在游戏、程序、脚本等各个
                 问题上，你我皆是先行者。ai为后人总结出的答案，皆是从你我脑中发芽。</p>
@@ -161,12 +281,24 @@
                 <p>这里是文章的结尾部分...</p>
             </div>
             
-            <a href="index.html" class="back-btn">返回首页</a>
+            <div class="back-btn-container">
+                <a href="index.html" class="back-btn">返回首页</a>
+            </div>
         </div>
     </div>
     
     <footer>
-        <p>给力小少年 | 知识分享</p>
+        <p>© 2023 给力小少年 | 知识分享</p>
     </footer>
+    
+    <script>
+        // 导航栏选中效果
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', function() {
+                document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
 </body>
 </html>
