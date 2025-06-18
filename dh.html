@@ -260,6 +260,16 @@
                 font-size: 2.2rem;
             }
         }
+
+        /* 新增：锚点跳转高亮效果 */
+        .article-item.highlight {
+            animation: highlight 3s ease;
+        }
+
+        @keyframes highlight {
+            0% { box-shadow: 0 0 0 3px var(--highlight); }
+            100% { box-shadow: 0 8px 25px rgba(0,0,0,0.05); }
+        }
     </style>
 </head>
 <body>
@@ -287,7 +297,7 @@
         <!-- 文章目录 -->
         <div class="article-list">
             <!-- 文章1 -->
-            <div class="article-item card">
+            <div class="article-item card" id="about-article">
                 <h2>关于关于</h2>
                 <div class="meta">2025年6月17日 | 分类: 心得体会</div>
                 <p class="excerpt">探讨我创建这个博客板块的初衷和思考过程，分享在互联网时代寻找答案的体验与观察...</p>
@@ -295,7 +305,7 @@
             </div>
             
             <!-- 文章2 -->
-            <div class="article-item card">
+            <div class="article-item card" id="placeholder-article">
                 <h2>占位置</h2>
                 <div class="meta">占位</div>
                 <p class="excerpt">占位</p>
@@ -303,7 +313,7 @@
             </div>
             
             <!-- 文章3 -->
-            <div class="article-item card">
+            <div class="article-item card" id="minecraft-shader-article">
                 <h2>我的世界光影优化技巧</h2>
                 <div class="meta">2025年4月22日 | 分类: 游戏MOD</div>
                 <p class="excerpt">分享我在Minecraft中实现更好光影效果的实用技巧和配置方法...</p>
@@ -311,7 +321,7 @@
             </div>
             
             <!-- 文章4 -->
-            <div class="article-item card">
+            <div class="article-item card" id="python-automation-article">
                 <h2>Python自动化脚本实践</h2>
                 <div class="meta">2025年3月15日 | 分类: 技术分享</div>
                 <p class="excerpt">记录几个提高工作效率的Python自动化脚本开发经验和技巧...</p>
@@ -319,7 +329,7 @@
             </div>
             
             <!-- 文章5 -->
-            <div class="article-item card">
+            <div class="article-item card" id="ai-coding-article">
                 <h2>如何有效使用AI辅助编程</h2>
                 <div class="meta">2025年2月28日 | 分类: 技术分享</div>
                 <p class="excerpt">分享我在开发过程中如何合理使用AI工具提高效率而不被其限制的经验...</p>
@@ -327,7 +337,7 @@
             </div>
             
             <!-- 文章6 -->
-            <div class="article-item card">
+            <div class="article-item card" id="eft-article">
                 <h2>EFT异常卡顿</h2>
                 <div class="meta">2025年6月18日 | 分类: 疑难杂症</div>
                 <p class="excerpt">关于逃离塔克夫离线版的一些问题</p>
@@ -357,6 +367,34 @@
                 // 这里可以添加实际筛选逻辑
                 console.log('筛选分类:', this.textContent);
             });
+        });
+
+        // 锚点跳转处理
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查URL中的hash
+            if (window.location.hash) {
+                const targetId = window.location.hash.substring(1);
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement) {
+                    // 延迟执行确保页面已加载
+                    setTimeout(() => {
+                        // 平滑滚动到目标位置
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                        
+                        // 添加高亮效果
+                        targetElement.classList.add('highlight');
+                        
+                        // 3秒后移除高亮
+                        setTimeout(() => {
+                            targetElement.classList.remove('highlight');
+                        }, 3000);
+                    }, 100);
+                }
+            }
         });
     </script>
 </body>
