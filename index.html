@@ -52,7 +52,7 @@
             display: flex;
             justify-content: center;
             gap: 25px;
-            position: relative; /* 为搜索框定位做准备 */
+            position: relative;
         }
         
         nav a {
@@ -111,6 +111,7 @@
         .search-box {
             display: flex;
             align-items: center;
+            position: relative;
         }
         
         .search-input {
@@ -147,6 +148,50 @@
         .search-btn:hover {
             background-color: var(--highlight);
             transform: scale(1.05);
+        }
+        
+        /* 搜索结果样式 */
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            z-index: 1000;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 10px;
+            display: none;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .search-result-item {
+            padding: 15px;
+            border-bottom: 1px solid var(--secondary);
+            transition: background 0.2s;
+        }
+        
+        .search-result-item:hover {
+            background: var(--primary-light);
+        }
+        
+        .search-result-title {
+            color: var(--primary);
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .search-result-excerpt {
+            color: var(--text-light);
+            font-size: 0.9em;
+        }
+        
+        .no-results {
+            padding: 20px;
+            text-align: center;
+            color: var(--text-light);
         }
         
         /* 主要内容区 */
@@ -249,7 +294,7 @@
                 flex-direction: column;
                 gap: 10px;
                 align-items: center;
-                padding-bottom: 60px; /* 为搜索框留空间 */
+                padding-bottom: 60px;
             }
             
             nav a {
@@ -272,6 +317,11 @@
                 width: 100%;
             }
             
+            .search-results {
+                width: 100%;
+                left: 0;
+            }
+            
             .container {
                 padding: 0 20px;
             }
@@ -292,12 +342,13 @@
             
             <div class="search-container">
                 <div class="search-box">
-                    <input type="text" class="search-input" placeholder="搜索文章...">
-                    <button class="search-btn">
+                    <input type="text" class="search-input" placeholder="搜索文章..." id="searchInput">
+                    <button class="search-btn" id="searchBtn">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
                         </svg>
                     </button>
+                    <div class="search-results" id="searchResults"></div>
                 </div>
             </div>
         </nav>
@@ -340,25 +391,105 @@
             });
         });
         
-        // 搜索功能
-        const searchInput = document.querySelector('.search-input');
-        const searchBtn = document.querySelector('.search-btn');
-        
-        searchBtn.addEventListener('click', performSearch);
-        searchInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                performSearch();
+        // 搜索功能实现
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const searchBtn = document.getElementById('searchBtn');
+            const searchResults = document.getElementById('searchResults');
+            
+            // 文章数据 - 可根据实际情况替换为从服务器获取
+            const articles = [
+                {
+                    id: 1,
+                    title: "关于关于",
+                    url: "bi.html",
+                    excerpt: "探讨我创建这个博客板块的初衷和思考过程...",
+                    content: "使用电脑在互联网中冲浪，难免会遇到许多各式各样的问题..."
+                },
+                {
+                    id: 2,
+                    title: "作品展示",
+                    url: "dh.html",
+                    excerpt: "展示我的游戏Mod开发作品...",
+                    content: "这里将展示我开发的各种游戏Mod作品..."
+                },
+                {
+                    id: 3,
+                    title: "界面更新",
+                    url: "#",
+                    excerpt: "最新界面更新内容介绍...",
+                    content: "我们对网站界面进行了全新改版，增加了搜索功能..."
+                }
+            ];
+            
+            // 执行搜索
+            function performSearch() {
+                const query = searchInput.value.trim().toLowerCase();
+                
+                if (!query) {
+                    searchResults.style.display = 'none';
+                    return;
+                }
+                
+                // 简单的客户端搜索
+                const results = articles.filter(article => {
+                    return article.title.toLowerCase().includes(query) || 
+                           article.content.toLowerCase().includes(query);
+                });
+                
+                displayResults(results);
             }
+            
+            // 显示搜索结果
+            function displayResults(results) {
+                searchResults.innerHTML = '';
+                
+                if (results.length === 0) {
+                    searchResults.innerHTML = '<div class="no-results">没有找到相关文章</div>';
+                    searchResults.style.display = 'block';
+                    return;
+                }
+                
+                results.forEach(article => {
+                    const resultItem = document.createElement('div');
+                    resultItem.className = 'search-result-item';
+                    resultItem.innerHTML = `
+                        <a href="${article.url}" style="text-decoration: none; color: inherit;">
+                            <div class="search-result-title">${highlightText(article.title, searchInput.value)}</div>
+                            <div class="search-result-excerpt">${highlightText(article.excerpt, searchInput.value)}</div>
+                        </a>
+                    `;
+                    searchResults.appendChild(resultItem);
+                });
+                
+                searchResults.style.display = 'block';
+            }
+            
+            // 高亮显示匹配文本
+            function highlightText(text, query) {
+                if (!query) return text;
+                const regex = new RegExp(query, 'gi');
+                return text.replace(regex, match => `<span style="background-color: yellow;">${match}</span>`);
+            }
+            
+            // 事件监听
+            searchBtn.addEventListener('click', performSearch);
+            searchInput.addEventListener('input', function() {
+                // 添加防抖，避免频繁触发
+                clearTimeout(this.timer);
+                this.timer = setTimeout(performSearch, 300);
+            });
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') performSearch();
+            });
+            
+            // 点击页面其他地方关闭搜索结果
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.search-container')) {
+                    searchResults.style.display = 'none';
+                }
+            });
         });
-        
-        function performSearch() {
-            const query = searchInput.value.trim();
-            if (query) {
-                alert('搜索功能演示: ' + query);
-                // 实际使用时替换为:
-                // window.location.href = '/search?q=' + encodeURIComponent(query);
-            }
-        }
     </script>
 </body>
 </html>
