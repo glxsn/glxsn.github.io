@@ -391,47 +391,35 @@
             });
         });
         
-        // 搜索功能实现
+        // 搜索功能实现（动态扫描DOM内容）
         document.addEventListener('DOMContentLoaded', function() {
             const searchInput = document.getElementById('searchInput');
             const searchBtn = document.getElementById('searchBtn');
             const searchResults = document.getElementById('searchResults');
             
-            // 文章数据 - 可根据实际情况替换为从服务器获取
-            const articles = [
-                {
-                    id: 1,
-                    title: "关于关于",
-                    url: "bi.html",
-                    excerpt: "探讨我创建这个博客板块的初衷和思考过程...",
-                    content: "使用电脑在互联网中冲浪，难免会遇到许多各式各样的问题..."
-                },
-                {
-                    id: 2,
-                    title: "作品展示",
-                    url: "dh.html",
-                    excerpt: "展示我的游戏Mod开发作品...",
-                    content: "这里将展示我开发的各种游戏Mod作品..."
-                },
-                {
-                    id: 3,
-                    title: "界面更新",
-                    url: "#",
-                    excerpt: "最新界面更新内容介绍...",
-                    content: "我们对网站界面进行了全新改版，增加了搜索功能..."
-                }
-            ];
+            // 从DOM动态获取文章数据
+            function getArticlesFromDOM() {
+                return Array.from(document.querySelectorAll('.card')).map(card => ({
+                    title: card.querySelector('h2').textContent,
+                    content: Array.from(card.querySelectorAll('p'))
+                               .map(p => p.textContent).join(' '),
+                    url: card.querySelector('a')?.href || window.location.href,
+                    excerpt: Array.from(card.querySelectorAll('p'))
+                               .map(p => p.textContent).join(' ').substring(0, 100) + '...'
+                }));
+            }
             
             // 执行搜索
             function performSearch() {
                 const query = searchInput.value.trim().toLowerCase();
+                const articles = getArticlesFromDOM(); // 每次动态获取最新内容
                 
                 if (!query) {
                     searchResults.style.display = 'none';
                     return;
                 }
                 
-                // 简单的客户端搜索
+                // 搜索逻辑
                 const results = articles.filter(article => {
                     return article.title.toLowerCase().includes(query) || 
                            article.content.toLowerCase().includes(query);
