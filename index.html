@@ -363,13 +363,13 @@
     <div class="container">
         <h1>· 给力小少年的板块！ ·</h1>
         
-        <div class="card">
+        <div class="card" id="about-this-page">
             <h2>关于这个界面</h2>
             <p>欢迎来到我的个人空间！这里是一个正在不断完善的创意平台，我会在这里分享我的想法、作品和经验。</p>
             <p>还会完善哒</p>
         </div>
         
-        <div class="card">
+        <div class="card" id="about-this-section">
             <h2>关于这个板块</h2>
             <p>这里主要分享我在游戏Mod开发过程中遇到的各种问题和解决方案，包括但不限于：</p>
             <p>• 主流游戏的Mod制作教程</p>
@@ -378,7 +378,7 @@
             <p>• 偶尔也会分享一些其他技术领域的心得</p>
         </div>
         
-        <div class="card">
+        <div class="card" id="latest-updates">
             <h2>最新动态</h2>
             <p>• 完善了搜索功能，现在可以搜索这个板块的文章啦</p>
             <p>• 更新了一下界面</p>
@@ -412,7 +412,8 @@
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(htmlContent, 'text/html');
                 
-                return Array.from(doc.querySelectorAll('.card')).map(card => ({
+                return Array.from(doc.querySelectorAll('.card')).map((card, index) => ({
+                    id: card.id || `card-${index}`,  // 使用已有ID或生成一个
                     title: card.querySelector('h2')?.textContent || '无标题',
                     content: Array.from(card.querySelectorAll('p'))
                                .map(p => p.textContent).join(' '),
@@ -491,7 +492,7 @@
                     const resultItem = document.createElement('div');
                     resultItem.className = 'search-result-item';
                     resultItem.innerHTML = `
-                        <a href="${article.url}" style="text-decoration: none; color: inherit;">
+                        <a href="${article.url}#${article.id}" style="text-decoration: none; color: inherit;">
                             <div class="search-result-title">${highlightText(article.title, searchInput.value)}</div>
                             <div class="search-result-excerpt">${highlightText(article.excerpt, searchInput.value)}</div>
                             <div class="search-result-source">来自: ${article.url}</div>
@@ -506,14 +507,14 @@
             // 高亮显示匹配文本
             function highlightText(text, query) {
                 if (!query) return text;
-                const regex = new RegExp(query, 'gi');
+                const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                const regex = new RegExp(escapedQuery, 'gi');
                 return text.replace(regex, match => `<span style="background-color: yellow;">${match}</span>`);
             }
             
             // 事件监听
             searchBtn.addEventListener('click', performSearch);
             searchInput.addEventListener('input', function() {
-                // 添加防抖，避免频繁触发
                 clearTimeout(this.timer);
                 this.timer = setTimeout(performSearch, 500);
             });
