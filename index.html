@@ -204,101 +204,6 @@
           margin-bottom: 15px;
         }
       }
-
-      /* 搜索结果高亮样式 */
-      .search-highlight {
-        background-color: #ffeb3b;
-        padding: 2px 0;
-        border-radius: 3px;
-        animation: highlightFade 2s ease-out;
-      }
-
-      @keyframes highlightFade {
-        from {
-          background-color: #ffeb3b;
-        }
-        to {
-          background-color: transparent;
-        }
-      }
-
-      /* 搜索结果样式 */
-      .search-result-item {
-        padding: 15px;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        transition: all 0.2s ease;
-      }
-
-      .search-result-item:hover {
-        background-color: rgba(0, 0, 0, 0.02);
-      }
-
-      .search-result-title {
-        font-weight: bold;
-        font-size: 1.1rem;
-        margin-bottom: 5px;
-        color: var(--primary);
-      }
-
-      .search-result-excerpt {
-        font-size: 0.9rem;
-        color: var(--text-light);
-        margin-bottom: 5px;
-        line-height: 1.5;
-      }
-
-      .search-result-source {
-        font-size: 0.8rem;
-        color: #888;
-        font-style: italic;
-      }
-
-      .highlight {
-        background-color: #ffeb3b;
-        font-weight: bold;
-      }
-
-      .no-results {
-        padding: 20px;
-        text-align: center;
-        color: var(--text-light);
-      }
-
-      .search-results {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: var(--card-bg);
-        border-radius: 0 0 15px 15px;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        max-height: 400px;
-        overflow-y: auto;
-        z-index: 1000;
-        display: none;
-      }
-
-      .search-results-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 15px;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-      }
-
-      .search-results-header h3 {
-        margin: 0;
-        font-size: 1rem;
-        color: var(--primary);
-      }
-
-      .close-search {
-        background: none;
-        border: none;
-        color: #888;
-        cursor: pointer;
-        font-size: 1.2rem;
-      }
     </style>
   </head>
 
@@ -476,7 +381,8 @@
           }
 
           // 显示加载状态
-          resultsContainer.innerHTML = '<div class="no-results">搜索中...</div>';
+          resultsContainer.innerHTML =
+            '<div class="no-results">搜索中...</div>';
           searchResults.style.display = "block";
 
           try {
@@ -514,7 +420,11 @@
             const resultItem = document.createElement("div");
             resultItem.className = "search-result-item";
             resultItem.innerHTML = `
-              <a href="${article.url}#${article.id}" class="search-result-link" data-query="${encodeURIComponent(searchInput.value)}">
+              <a href="${article.url}#${
+              article.id
+            }" class="search-result-link" data-query="${encodeURIComponent(
+              searchInput.value
+            )}">
                 <div class="search-result-title">${highlightText(
                   article.title,
                   searchInput.value
@@ -523,9 +433,7 @@
                   article.excerpt,
                   searchInput.value
                 )}</div>
-                <div class="search-result-source">来自: ${
-                  article.url
-                }</div>
+                <div class="search-result-source">来自: ${article.url}</div>
               </a>
             `;
             resultsContainer.appendChild(resultItem);
@@ -625,9 +533,9 @@
             const link = e.target.closest(".search-result-link");
             const targetUrl = link.getAttribute("href");
             const query = link.getAttribute("data-query");
-            
+
             // 如果是当前页面
-            if (targetUrl.startsWith(window.location.pathname) {
+            if (targetUrl.startsWith(window.location.pathname)) {
               const hash = targetUrl.split("#")[1];
               window.location.hash = hash;
               if (query) {
@@ -641,10 +549,10 @@
               const newUrl = targetUrl + (query ? `?q=${query}` : "");
               window.location.href = newUrl;
             }
-            
+
             searchResults.style.display = "none";
           }
-          
+
           // 点击页面其他地方关闭搜索结果
           if (
             !e.target.closest(".search-container") &&
