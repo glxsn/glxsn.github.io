@@ -272,6 +272,7 @@
         margin-bottom: 5px;
         border-radius: 5px;
         transition: all 0.2s ease;
+        cursor: pointer;
       }
 
       .search-result-item:hover {
@@ -308,12 +309,11 @@
         border-radius: 2px;
       }
 
-      /* 修改导航栏布局 */
+      /* 导航栏样式恢复 */
       #mainHeader nav {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        position: relative;
         max-width: 1200px;
         margin: 0 auto;
         padding: 0 20px;
@@ -321,9 +321,9 @@
 
       #mainHeader nav ul {
         display: flex;
-        margin: 0 auto;
-        padding: 0;
         list-style: none;
+        padding: 0;
+        margin: 0;
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
@@ -468,9 +468,10 @@
             const content = Array.from(card.querySelectorAll("p"))
               .map((p) => p.textContent)
               .join(" ");
+            const id = card.id || `card-${index}`;
 
             return {
-              id: card.id || `card-${index}`,
+              id,
               title,
               content,
               url: pageUrl,
@@ -565,6 +566,23 @@
               )}</div>
               <div class="search-result-source">来自: ${article.url}</div>
             `;
+            
+            // 添加点击事件
+            resultItem.addEventListener("click", function() {
+              if (article.url === window.location.pathname.split("/").pop() || 
+                  (article.url === "index.html" && window.location.pathname.endsWith("/"))) {
+                // 当前页面，滚动到对应位置
+                const element = document.getElementById(article.id);
+                if (element) {
+                  element.scrollIntoView({ behavior: "smooth" });
+                }
+              } else {
+                // 其他页面，跳转并添加hash
+                window.location.href = `${article.url}#${article.id}`;
+              }
+              searchResults.style.display = "none";
+            });
+            
             resultsContainer.appendChild(resultItem);
           });
         }
@@ -608,6 +626,21 @@
             searchResults.style.display = "none";
           }
         });
+
+        // 检查URL hash并滚动到对应位置
+        function checkHashAndScroll() {
+          if (window.location.hash) {
+            const element = document.getElementById(window.location.hash.substring(1));
+            if (element) {
+              setTimeout(() => {
+                element.scrollIntoView({ behavior: "smooth" });
+              }, 100);
+            }
+          }
+        }
+
+        // 页面加载时检查hash
+        checkHashAndScroll();
       });
     </script>
   </body>
