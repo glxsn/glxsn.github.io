@@ -3,10 +3,157 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>目录 | 给力小少年</title>
+    <title>给力小少年的板块</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
     <link rel="stylesheet" href="./css/main.css" />
+    <link
+      rel="shortcut icon"
+      href="https://img.zmal.top/frined/57de5ad8ef1705f8fc15a83aa4de2706_720.4ub7p2t8cl.jpg"
+      type="image/x-icon"
+    />
     <style>
-      .page-title {
+      /* 修改导航栏布局 - 与第二个HTML文件保持一致 */
+      nav {
+        display: block;
+      }
+
+      .header-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 30px;
+      }
+
+      nav ul {
+        display: flex;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        justify-content: center;
+      }
+
+      .search-container {
+        position: absolute;
+        right: 30px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      nav ul li a {
+        padding: 15px 20px;
+        text-decoration: none;
+        color: var(--text);
+        transition: all 0.3s ease;
+        position: relative;
+        font-size: 1rem;
+      }
+
+      nav ul li a:hover {
+        color: var(--primary);
+      }
+
+      nav ul li a.active {
+        color: var(--primary);
+        font-weight: bold;
+      }
+
+      /* 移动端调整 */
+      @media (max-width: 768px) {
+        .header-container {
+          padding: 0 15px;
+        }
+        
+        nav ul {
+          flex-direction: column;
+          align-items: center;
+        }
+        
+        .search-container {
+          position: static;
+          margin: 15px auto;
+          transform: none;
+          width: 90%;
+        }
+        
+        nav ul li a {
+          padding: 10px;
+        }
+      }
+
+      /* 以下是原有样式，完全保持不变 */
+      .article-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+      }
+
+      .article-item {
+        background: var(--card-bg);
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+      }
+
+      .article-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+      }
+
+      .article-item h3 {
+        font-size: 1.3rem;
+        margin-bottom: 12px;
+        color: var(--primary);
+      }
+
+      .article-item .meta {
+        color: var(--text-light);
+        font-size: 0.85rem;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .article-item .meta i {
+        color: var(--primary);
+      }
+
+      .article-item .excerpt {
+        margin-bottom: 15px;
+        color: var(--text);
+        line-height: 1.6;
+        font-size: 0.95rem;
+      }
+
+      .read-more {
+        display: inline-block;
+        padding: 8px 16px;
+        background-color: var(--primary);
+        color: white;
+        text-decoration: none;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        font-size: 0.85rem;
+      }
+
+      .read-more:hover {
+        background-color: #6a8fc1;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(125, 157, 202, 0.3);
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 60px auto 40px;
+        padding: 0 30px;
+        flex: 1;
+      }
+
+      h1 {
         font-size: 2.8rem;
         margin-bottom: 40px;
         font-weight: 300;
@@ -16,9 +163,10 @@
         display: inline-block;
         left: 50%;
         transform: translateX(-50%);
+        padding-top: 20px;
       }
 
-      .page-title::after {
+      h1::after {
         content: "";
         position: absolute;
         bottom: -10px;
@@ -29,212 +177,270 @@
         border-radius: 3px;
       }
 
-      /* 文章目录卡片 */
-      .article-list {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 30px;
-        margin-bottom: 50px;
-      }
-
-      .article-item {
+      .card {
         background: var(--card-bg);
-        padding: 30px;
+        padding: 40px;
+        margin-bottom: 30px;
         border-radius: 20px;
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
         transition: all 0.3s ease;
         border: 1px solid rgba(0, 0, 0, 0.03);
-        display: flex;
-        flex-direction: column;
       }
 
-      .article-item:hover {
+      .card:hover {
         transform: translateY(-5px);
         box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
       }
 
-      .article-item h2 {
-        font-size: 1.5rem;
-        margin-bottom: 15px;
-        color: var(--primary);
-        flex-grow: 1;
-      }
-
-      .article-item .meta {
-        color: var(--text-light);
-        font-size: 0.9rem;
-        margin-bottom: 15px;
-      }
-
-      .article-item .excerpt {
+      .card h2 {
+        font-size: 1.8rem;
         margin-bottom: 20px;
-        color: var(--text);
-        line-height: 1.6;
-        flex-grow: 1;
+        color: var(--primary);
+        position: relative;
+        padding-bottom: 10px;
       }
 
-      .read-more {
-        display: inline-block;
-        padding: 10px 20px;
-        background-color: var(--primary);
-        color: white;
-        text-decoration: none;
-        border-radius: 50px;
-        transition: all 0.3s ease;
-        align-self: flex-start;
-        font-size: 0.9rem;
+      .card h2::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background-color: var(--highlight);
+        border-radius: 3px;
       }
 
-      .read-more:hover {
-        background-color: #6a8fc1;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(125, 157, 202, 0.3);
+      .card p {
+        margin-bottom: 20px;
+        font-size: 1.1rem;
+        color: var(--text-light);
+        line-height: 1.8;
       }
 
-      /* 分类筛选 */
-      .category-filter {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-        margin-bottom: 40px;
-        flex-wrap: wrap;
-      }
-
-      .category-btn {
-        padding: 8px 20px;
-        background-color: var(--light);
-        color: var(--text);
-        border: 1px solid var(--secondary);
-        border-radius: 50px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-size: 0.9rem;
-      }
-
-      .category-btn:hover,
-      .category-btn.active {
-        background-color: var(--primary);
-        color: white;
-        border-color: var(--primary);
-      }
-
-      /* 响应式设计 */
       @media (max-width: 768px) {
+        .card h2 {
+          font-size: 1.5rem;
+          margin-bottom: 15px;
+          line-height: 1.4;
+        }
+
+        .card p {
+          font-size: 1.05rem;
+          margin-bottom: 18px;
+          line-height: 1.75;
+        }
+
         .article-list {
           grid-template-columns: 1fr;
         }
+      }
 
-        .page-title {
-          font-size: 2.2rem;
-          margin-top: 10px;
-        }
-
-        .nav-toggle.active span:nth-child(1) {
-          transform: rotate(45deg) translate(5px, 5px);
-        }
-
-        .nav-toggle.active span:nth-child(2) {
+      @keyframes fadeIn {
+        from {
           opacity: 0;
+          transform: translateY(10px);
         }
 
-        .nav-toggle.active span:nth-child(3) {
-          transform: rotate(-45deg) translate(7px, -6px);
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
       }
 
-      @keyframes highlight {
-        0% {
-          box-shadow: 0 0 0 3px var(--highlight);
-        }
+      .article-item {
+        animation: fadeIn 0.4s ease forwards;
+        opacity: 0;
+      }
 
-        100% {
-          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+      .title-container {
+        margin-top: 30px;
+        margin-bottom: 20px;
+      }
+
+      @media (max-width: 768px) {
+        .title-container {
+          margin-top: 40px;
+          margin-bottom: 15px;
         }
+      }
+
+      /* 搜索相关样式 */
+      .search-box {
+        display: flex;
+        align-items: center;
+      }
+
+      .search-input {
+        padding: 8px 15px;
+        border-radius: 20px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        width: 200px;
+        transition: all 0.3s ease;
+      }
+
+      .search-input:focus {
+        outline: none;
+        width: 250px;
+        border-color: var(--primary);
+      }
+
+      .search-btn {
+        background: none;
+        border: none;
+        margin-left: -30px;
+        cursor: pointer;
+        color: var(--primary);
+      }
+
+      .search-results {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--card-bg);
+        border-radius: 0 0 10px 10px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        max-height: 400px;
+        overflow-y: auto;
+        z-index: 1002;
+        display: none;
+        padding: 10px;
+      }
+
+      .search-results-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 10px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      }
+
+      .search-results-header h3 {
+        margin: 0;
+        font-size: 1rem;
+        color: var(--primary);
+      }
+
+      .close-search {
+        background: none;
+        border: none;
+        color: #888;
+        cursor: pointer;
+      }
+
+      .search-result-item {
+        padding: 10px;
+        margin-bottom: 5px;
+        border-radius: 5px;
+        transition: all 0.2s ease;
+        cursor: pointer;
+      }
+
+      .search-result-item:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+
+      .search-result-title {
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: var(--primary);
+      }
+
+      .search-result-excerpt {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 5px;
+      }
+
+      .search-result-source {
+        font-size: 0.8rem;
+        color: #888;
+      }
+
+      .no-results {
+        padding: 15px;
+        text-align: center;
+        color: var(--text-light);
+      }
+
+      .highlight {
+        background-color: #ffeb3b;
+        font-weight: bold;
+        padding: 0 2px;
+        border-radius: 2px;
       }
     </style>
   </head>
 
   <body>
-    <header>
+    <header id="mainHeader">
       <div class="header-container">
         <nav>
           <ul>
-            <li><a href="index.html">首页</a></li>
+            <li><a href="#" class="active">首页</a></li>
             <li><a href="about.html">关于</a></li>
-            <li><a href="dh.html" class="active">作品</a></li>
+            <li><a href="dh.html">作品</a></li>
             <li><a href="#">联系</a></li>
           </ul>
+
+          <div class="search-container">
+            <div class="search-box">
+              <input
+                type="text"
+                class="search-input"
+                placeholder="搜索文章..."
+                id="searchInput"
+              />
+              <button class="search-btn" id="searchBtn">
+                <i class="fas fa-search"></i>
+              </button>
+              <div class="search-results" id="searchResults">
+                <div class="search-results-header">
+                  <h3>搜索结果</h3>
+                  <button class="close-search" id="closeSearch">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+                <div id="resultsContainer"></div>
+              </div>
+            </div>
+          </div>
         </nav>
       </div>
     </header>
 
-    <div class="container">
-      <h1 class="page-title">· 相关文章 ·</h1>
-
-      <!-- 分类筛选 -->
-      <div class="category-filter">
-        <button class="category-btn active">全部</button>
-        <button class="category-btn">游戏MOD</button>
-        <button class="category-btn">技术分享</button>
-        <button class="category-btn">心得体会</button>
-        <button class="category-btn">其他</button>
+    <div class="container" id="contentContainer">
+      <div class="title-container">
+        <h1>· 给力小少年的板块！ ·</h1>
       </div>
 
-      <!-- 文章目录 -->
-      <div class="article-list">
-        <!-- 文章1 -->
-        <div class="article-item card" id="about-article">
-          <h2>关于关于</h2>
-          <div class="meta">2025年6月17日 | 分类: 心得体会</div>
-          <p class="excerpt">
-            探讨我创建这个博客板块的初衷和思考过程，分享在互联网时代寻找答案的体验与观察...
-          </p>
-          <a href="about.html" class="read-more">阅读全文</a>
-        </div>
+      <div class="card" id="about-this-page">
+        <h2>关于这个界面</h2>
+        <p>
+          欢迎来到我的个人空间！这里是一个正在不断完善的创意平台，我会在这里分享我的想法、作品和经验。
+        </p>
+        <p>还会完善哒</p>
+      </div>
 
-        <!-- 文章2 -->
-        <div class="article-item card" id="placeholder-article">
-          <h2>占位置</h2>
-          <div class="meta">占位</div>
-          <p class="excerpt">占位</p>
-          <a href="./post/article-unity-mod.html" class="read-more">阅读全文</a>
-        </div>
+      <div class="card" id="about-this-section">
+        <h2>关于这个板块</h2>
+        <p>
+          这里主要分享我在游戏Mod开发过程中遇到的各种问题和解决方案，包括但不限于：
+        </p>
+        <p>• 主流游戏的Mod制作教程</p>
+        <p>• 开发过程中遇到的疑难杂症</p>
+        <p>• 有趣的创意实现</p>
+        <p>• 偶尔也会分享一些其他技术领域的心得</p>
+      </div>
 
-        <!-- 文章3 -->
-        <div class="article-item card" id="minecraft-shader-article">
-          <h2>我的世界光影优化技巧</h2>
-          <div class="meta">2025年4月22日 | 分类: 游戏MOD</div>
-          <p class="excerpt">
-            分享我在Minecraft中实现更好光影效果的实用技巧和配置方法...
-          </p>
-          <a href="./post/article-mc-shader.html" class="read-more">阅读全文</a>
-        </div>
-
-        <!-- 文章4 -->
-        <div class="article-item card" id="python-automation-article">
-          <h2>Python自动化脚本实践</h2>
-          <div class="meta">2025年3月15日 | 分类: 技术分享</div>
-          <p class="excerpt">
-            记录几个提高工作效率的Python自动化脚本开发经验和技巧...
-          </p>
-          <a href="./post/article-python-auto.html" class="read-more">阅读全文</a>
-        </div>
-
-        <!-- 文章5 -->
-        <div class="article-item card" id="ai-coding-article">
-          <h2>通过修改配置文件优化EFT</h2>
-          <div class="meta">2025年6月20日 | 分类: 疑难杂症</div>
-          <p class="excerpt">关于逃离塔克夫离线版的优化问题</p>
-          <a href="./post/yhEFT.html" class="read-more">阅读全文</a>
-        </div>
-
-        <!-- 文章6 -->
-        <div class="article-item card" id="eft-article">
-          <h2>EFT异常卡顿</h2>
-          <div class="meta">2025年6月18日 | 分类: 疑难杂症</div>
-          <p class="excerpt">关于逃离塔克夫离线版的一些问题</p>
-          <a href="./post/abEFT.html" class="read-more">阅读全文</a>
-        </div>
+      <div class="card" id="latest-updates">
+        <h2>最新动态</h2>
+        <p>• 优化了手机端的界面表现，并且修复了其的许多bug</p>
+        <p>• 现在可以自动定位搜索到的文章啦</p>
+        <p>• 完善了搜索功能，现在可以搜索这个板块的文章啦</p>
+        <p>• 更新了一下界面</p>
       </div>
     </div>
 
@@ -243,44 +449,199 @@
     </footer>
 
     <script>
-      // 分类筛选功能
-      document.querySelectorAll(".category-btn").forEach((btn) => {
-        btn.addEventListener("click", function () {
-          document
-            .querySelectorAll(".category-btn")
-            .forEach((b) => b.classList.remove("active"));
-          this.classList.add("active");
-          // 这里可以添加实际筛选逻辑
-          console.log("筛选分类:", this.textContent);
-        });
-      });
-
-      // 锚点跳转处理
       document.addEventListener("DOMContentLoaded", function () {
-        // 检查URL中的hash
-        if (window.location.hash) {
-          const targetId = window.location.hash.substring(1);
-          const targetElement = document.getElementById(targetId);
+        const searchInput = document.getElementById("searchInput");
+        const searchBtn = document.getElementById("searchBtn");
+        const searchResults = document.getElementById("searchResults");
+        const resultsContainer = document.getElementById("resultsContainer");
+        const closeSearch = document.getElementById("closeSearch");
 
-          if (targetElement) {
-            // 延迟执行确保页面已加载
-            setTimeout(() => {
-              // 平滑滚动到目标位置
-              targetElement.scrollIntoView({
-                behavior: "smooth",
-                block: "start",
-              });
+        // 要搜索的页面列表
+        const pagesToSearch = ["index.html", "about.html", "dh.html"];
 
-              // 添加高亮效果
-              targetElement.classList.add("highlight");
+        // 从DOM解析文章数据
+        function parseArticles(htmlContent, pageUrl) {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(htmlContent, "text/html");
 
-              // 3秒后移除高亮
-              setTimeout(() => {
-                targetElement.classList.remove("highlight");
-              }, 3000);
-            }, 100);
+          return Array.from(doc.querySelectorAll(".card")).map((card, index) => {
+            const title = card.querySelector("h2")?.textContent || "无标题";
+            const content = Array.from(card.querySelectorAll("p"))
+              .map((p) => p.textContent)
+              .join(" ");
+            const id = card.id || `card-${index}`;
+
+            return {
+              id,
+              title,
+              content,
+              url: pageUrl,
+              excerpt:
+                content.substring(0, 100) + (content.length > 100 ? "..." : ""),
+            };
+          });
+        }
+
+        // 获取所有文章数据
+        async function getAllArticles() {
+          let allArticles = [];
+          const currentPage =
+            window.location.pathname.split("/").pop() || "index.html";
+
+          // 获取当前页面的文章
+          const currentPageArticles = parseArticles(
+            document.documentElement.outerHTML,
+            currentPage
+          );
+          allArticles = [...currentPageArticles];
+
+          // 获取其他页面的文章
+          for (const page of pagesToSearch) {
+            if (page === currentPage) continue;
+            
+            try {
+              const response = await fetch(page);
+              if (!response.ok) continue;
+              
+              const html = await response.text();
+              const articles = parseArticles(html, page);
+              allArticles.push(...articles);
+            } catch (error) {
+              console.error(`获取页面 ${page} 失败:`, error);
+            }
+          }
+
+          return allArticles;
+        }
+
+        // 执行搜索
+        async function performSearch() {
+          const query = searchInput.value.trim().toLowerCase();
+          
+          if (!query) {
+            searchResults.style.display = "none";
+            return;
+          }
+
+          // 显示加载状态
+          resultsContainer.innerHTML = '<div class="no-results">搜索中...</div>';
+          searchResults.style.display = "block";
+
+          try {
+            const articles = await getAllArticles();
+            const results = articles.filter(
+              (article) =>
+                article.title.toLowerCase().includes(query) ||
+                article.content.toLowerCase().includes(query)
+            );
+            
+            displayResults(results);
+          } catch (error) {
+            console.error("搜索出错:", error);
+            resultsContainer.innerHTML =
+              '<div class="no-results">搜索失败，请重试</div>';
           }
         }
+
+        // 显示搜索结果
+        function displayResults(results) {
+          resultsContainer.innerHTML = "";
+
+          if (results.length === 0) {
+            resultsContainer.innerHTML =
+              '<div class="no-results">没有找到相关文章</div>';
+            return;
+          }
+
+          results.forEach((article) => {
+            const resultItem = document.createElement("div");
+            resultItem.className = "search-result-item";
+            resultItem.innerHTML = `
+              <div class="search-result-title">${highlightText(
+                article.title,
+                searchInput.value
+              )}</div>
+              <div class="search-result-excerpt">${highlightText(
+                article.excerpt,
+                searchInput.value
+              )}</div>
+              <div class="search-result-source">来自: ${article.url}</div>
+            `;
+            
+            // 添加点击事件
+            resultItem.addEventListener("click", function() {
+              if (article.url === window.location.pathname.split("/").pop() || 
+                  (article.url === "index.html" && window.location.pathname.endsWith("/"))) {
+                // 当前页面，滚动到对应位置
+                const element = document.getElementById(article.id);
+                if (element) {
+                  element.scrollIntoView({ behavior: "smooth" });
+                }
+              } else {
+                // 其他页面，跳转并添加hash
+                window.location.href = `${article.url}#${article.id}`;
+              }
+              searchResults.style.display = "none";
+            });
+            
+            resultsContainer.appendChild(resultItem);
+          });
+        }
+
+        // 高亮显示匹配文本
+        function highlightText(text, query) {
+          if (!query) return text;
+          const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+          const regex = new RegExp(escapedQuery, "gi");
+          return text.replace(
+            regex,
+            (match) => `<span class="highlight">${match}</span>`
+          );
+        }
+
+        // 防抖函数
+        function debounce(func, delay) {
+          let timer;
+          return function () {
+            clearTimeout(timer);
+            timer = setTimeout(() => func.apply(this, arguments), delay);
+          };
+        }
+
+        // 事件监听
+        searchBtn.addEventListener("click", performSearch);
+        searchInput.addEventListener("input", debounce(performSearch, 300));
+        searchInput.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") performSearch();
+        });
+        closeSearch.addEventListener("click", () => {
+          searchResults.style.display = "none";
+        });
+
+        // 点击页面其他地方关闭搜索结果
+        document.addEventListener("click", (e) => {
+          if (
+            !e.target.closest(".search-container") &&
+            !e.target.closest(".search-results")
+          ) {
+            searchResults.style.display = "none";
+          }
+        });
+
+        // 检查URL hash并滚动到对应位置
+        function checkHashAndScroll() {
+          if (window.location.hash) {
+            const element = document.getElementById(window.location.hash.substring(1));
+            if (element) {
+              setTimeout(() => {
+                element.scrollIntoView({ behavior: "smooth" });
+              }, 100);
+            }
+          }
+        }
+
+        // 页面加载时检查hash
+        checkHashAndScroll();
       });
     </script>
   </body>
