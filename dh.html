@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>目录 | 给力小少年</title>
+    <link rel="stylesheet" href="./css/main.css" />
+    <style>
+      .page-title {
+        font-size: 2.8rem;
+        margin-bottom: 40px;
+        font-weight: 300;
+        text-align: center;
+        color: var(--primary);
+        position: relative;
+        display: inline-block;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .page-title::after {
+        content: "";
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary), var(--highlight));
+        border-radius: 3px;
+      }
+
+      /* 文章目录卡片 */
+      .article-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 30px;
+        margin-bottom: 50px;
+      }
+
+      .article-item {
+        background: var(--card-bg);
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(0, 0, 0, 0.03);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .article-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .article-item h2 {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+        color: var(--primary);
+        flex-grow: 1;
+      }
+
+      .article-item .meta {
+        color: var(--text-light);
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+      }
+
+      .article-item .excerpt {
+        margin-bottom: 20px;
+        color: var(--text);
+        line-height: 1.6;
+        flex-grow: 1;
+      }
+
+      .read-more {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: var(--primary);
+        color: white;
+        text-decoration: none;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        align-self: flex-start;
+        font-size: 0.9rem;
+      }
+
+      .read-more:hover {
+        background-color: #6a8fc1;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(125, 157, 202, 0.3);
+      }
+
+      /* 分类筛选 */
+      .category-filter {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+      }
+
+      .category-btn {
+        padding: 8px 20px;
+        background-color: var(--light);
+        color: var(--text);
+        border: 1px solid var(--secondary);
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+      }
+
+      .category-btn:hover,
+      .category-btn.active {
+        background-color: var(--primary);
+        color: white;
+        border-color: var(--primary);
+      }
+
+      /* 响应式设计 */
+      @media (max-width: 768px) {
+        .article-list {
+          grid-template-columns: 1fr;
+        }
+
+        .page-title {
+          font-size: 2.2rem;
+          margin-top: 10px;
+        }
+
+        .nav-toggle.active span:nth-child(1) {
+          transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .nav-toggle.active span:nth-child(2) {
+          opacity: 0;
+        }
+
+        .nav-toggle.active span:nth-child(3) {
+          transform: rotate(-45deg) translate(7px, -6px);
+        }
+      }
+
+      @keyframes highlight {
+        0% {
+          box-shadow: 0 0 0 3px var(--highlight);
+        }
+
+        100% {
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <div class="header-container">
+        <nav>
+          <ul>
+            <li><a href="index.html">首页</a></li>
+            <li><a href="about.html">关于</a></li>
+            <li><a href="dh.html" class="active">作品</a></li>
+            <li><a href="#">联系</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container">
+      <h1 class="page-title">· 相关文章 ·</h1>
+
+      <!-- 分类筛选 -->
+      <div class="category-filter">
+        <button class="category-btn active">全部</button>
+        <button class="category-btn">游戏MOD</button>
+        <button class="category-btn">技术分享</button>
+        <button class="category-btn">心得体会</button>
+        <button class="category-btn">其他</button>
+      </div>
+
+      <!-- 文章目录 -->
+      <div class="article-list">
+        <!-- 文章1 -->
+        <div class="article-item card" id="about-article">
+          <h2>关于关于</h2>
+          <div class="meta">2025年6月17日 | 分类: 心得体会</div>
+          <p class="excerpt">
+            探讨我创建这个博客板块的初衷和思考过程，分享在互联网时代寻找答案的体验与观察...
+          </p>
+          <a href="about.html" class="read-more">阅读全文</a>
+        </div>
+
+        <!-- 文章2 -->
+        <div class="article-item card" id="placeholder-article">
+          <h2>占位置</h2>
+          <div class="meta">占位</div>
+          <p class="excerpt">占位</p>
+          <a href="./post/article-unity-mod.html" class="read-more">阅读全文</a>
+        </div>
+
+        <!-- 文章3 -->
+        <div class="article-item card" id="minecraft-shader-article">
+          <h2>我的世界光影优化技巧</h2>
+          <div class="meta">2025年4月22日 | 分类: 游戏MOD</div>
+          <p class="excerpt">
+            分享我在Minecraft中实现更好光影效果的实用技巧和配置方法...
+          </p>
+          <a href="./post/article-mc-shader.html" class="read-more">阅读全文</a>
+        </div>
+
+        <!-- 文章4 -->
+        <div class="article-item card" id="python-automation-article">
+          <h2>Python自动化脚本实践</h2>
+          <div class="meta">2025年3月15日 | 分类: 技术分享</div>
+          <p class="excerpt">
+            记录几个提高工作效率的Python自动化脚本开发经验和技巧...
+          </p>
+          <a href="./post/article-python-auto.html" class="read-more">阅读全文</a>
+        </div>
+
+        <!-- 文章5 -->
+        <div class="article-item card" id="ai-coding-article">
+          <h2>通过修改配置文件优化EFT</h2>
+          <div class="meta">2025年6月20日 | 分类: 疑难杂症</div>
+          <p class="excerpt">关于逃离塔克夫离线版的优化问题</p>
+          <a href="./post/yhEFT.html" class="read-more">阅读全文</a>
+        </div>
+
+        <!-- 文章6 -->
+        <div class="article-item card" id="eft-article">
+          <h2>EFT异常卡顿</h2>
+          <div class="meta">2025年6月18日 | 分类: 疑难杂症</div>
+          <p class="excerpt">关于逃离塔克夫离线版的一些问题</p>
+          <a href="./post/abEFT.html" class="read-more">阅读全文</a>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p>头发掉光光啦</p>
+    </footer>
+
+    <script>
+      // 分类筛选功能
+      document.querySelectorAll(".category-btn").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          document
+            .querySelectorAll(".category-btn")
+            .forEach((b) => b.classList.remove("active"));
+          this.classList.add("active");
+          // 这里可以添加实际筛选逻辑
+          console.log("筛选分类:", this.textContent);
+        });
+      });
+
+      // 锚点跳转处理
+      document.addEventListener("DOMContentLoaded", function () {
+        // 检查URL中的hash
+        if (window.location.hash) {
+          const targetId = window.location.hash.substring(1);
+          const targetElement = document.getElementById(targetId);
+
+          if (targetElement) {
+            // 延迟执行确保页面已加载
+            setTimeout(() => {
+              // 平滑滚动到目标位置
+              targetElement.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+              });
+
+              // 添加高亮效果
+              targetElement.classList.add("highlight");
+
+              // 3秒后移除高亮
+              setTimeout(() => {
+                targetElement.classList.remove("highlight");
+              }, 3000);
+            }, 100);
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

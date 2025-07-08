@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EFT异常卡顿 | 给力小少年</title>
+    <link rel="stylesheet" href="./css/main.css" />
+    <style>
+      /* 文章卡片 - 圆润风格 */
+      .article-card {
+        background: var(--card-bg);
+        padding: 50px;
+        margin-bottom: 40px;
+        border-radius: 20px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(0, 0, 0, 0.03);
+      }
+
+      .article-card:hover {
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .article-title {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        color: var(--primary);
+        text-align: center;
+        position: relative;
+        padding-bottom: 15px;
+      }
+
+      .article-title::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary), var(--highlight));
+        border-radius: 3px;
+      }
+
+      .article-meta {
+        color: var(--text-light);
+        text-align: center;
+        margin-bottom: 40px;
+        font-size: 1rem;
+      }
+
+      .article-content {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: var(--text);
+      }
+
+      .article-content p {
+        margin-bottom: 25px;
+      }
+
+      .article-content h2 {
+        font-size: 1.8rem;
+        margin: 40px 0 20px;
+        color: var(--primary);
+        position: relative;
+        padding-bottom: 10px;
+      }
+
+      .article-content h2::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background-color: var(--highlight);
+        border-radius: 3px;
+      }
+
+      /* 返回按钮 - 圆润风格 */
+      .back-btn {
+        display: inline-block;
+        padding: 12px 30px;
+        background-color: var(--primary);
+        color: white;
+        text-decoration: none;
+        border-radius: 50px;
+        margin-top: 40px;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(125, 157, 202, 0.3);
+      }
+
+      .back-btn:hover {
+        background-color: #6a8fc1;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(125, 157, 202, 0.4);
+      }
+
+      .back-btn-container {
+        text-align: center;
+      }
+
+      /* 新增图片样式 */
+      .article-image {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin: 20px 0;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        cursor: zoom-in;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .article-image:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+      }
+
+      /* 图片容器，用于多图排列 */
+      .image-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin: 25px 0;
+      }
+
+      /* 图片说明文字 */
+      .image-caption {
+        text-align: center;
+        font-size: 0.9em;
+        color: var(--text-light);
+        margin-top: 8px;
+        margin-bottom: 15px;
+      }
+
+      /* 图片放大效果 */
+      .zoomed {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(1.05);
+        z-index: 1000;
+        max-width: 90vw;
+        max-height: 90vh;
+        cursor: zoom-out;
+        box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.8);
+        border-radius: 10px;
+      }
+
+      /* 响应式设计 */
+      @media (max-width: 768px) {
+        .article-card {
+          padding: 30px;
+        }
+
+        .article-title {
+          font-size: 2rem;
+        }
+
+        .image-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .article-image {
+          max-width: 100%;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <nav>
+        <a href="index.html">首页</a>
+        <a href="#" class="active">这篇</a>
+        <a href="dh.html">作品</a>
+        <a href="#">联系</a>
+      </nav>
+    </header>
+
+    <div class="container">
+      <div class="article-card">
+        <h1 class="article-title">EFT异常卡顿</h1>
+        <div class="article-meta">
+          发布日期：2025年6月18日 | 作者：给力小少年
+        </div>
+        <div class="article-content">
+          <!-- 保留原有文章内容 -->
+          <p>哦EFT，我的EFT</p>
+
+          <h2>怎么发现这个问题的？</h2>
+          <p>
+            这是一个晴朗的下午，少年新买了个键盘但散热架还没到（哦笔记本，我的笔记本）。因为桌面空间实在不够，为了游戏的舒适性，少年把键盘架到了笔记本键盘的上面，玩了一段时间，因为键盘下面的支撑片压到了电脑的电源键，
+            几秒后电脑强制关机，再打开游戏便出现这个问题，只要是局内游戏，画面将间歇性卡顿，时间间隔很短（一顿一顿的，一秒好几次），在卸载游戏文件后再安装回来问题依旧，困扰了少年一段时间。
+          </p>
+
+          <h2>解决办法：删除c盘中相关游戏日志即可</h2>
+
+          <!-- 单张图片示例 -->
+          <img
+            src="picture/2.png"
+            alt="游戏日志存储路径"
+            class="article-image"
+            style="max-width: 600px"
+          />
+          <p class="image-caption">游戏日志在C盘的存储路径</p>
+
+          <!-- 多图网格布局示例 -->
+          <div class="image-grid">
+            <div>
+              <img
+                src="picture/1.png"
+                alt="日志文件示例1"
+                class="article-image"
+              />
+              <p class="image-caption">错误的日志文件示例</p>
+            </div>
+          </div>
+
+          <p>
+            和大部分单机游戏的存档一样，其部分日志文件是存储在c盘当中的，所以单纯的删除游戏文件是行不通的。
+            那么为什么日志文件会影响游戏运行呢？
+          </p>
+
+          <p>
+            少年在这里猜测是：强制关机导致日志文件未正常关闭，在重新启动游戏时，游戏试图访问日志但却无法正常访问，它俩反复拉扯导致游戏卡顿。
+          </p>
+          <p></p>
+
+          <p>就很有趣</p>
+        </div>
+
+        <div class="back-btn-container">
+          <a href="dh.html" class="back-btn">返回</a>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p>头发掉光光啦</p>
+    </footer>
+
+    <script>
+      // 图片点击放大功能
+      document.querySelectorAll(".article-image").forEach((img) => {
+        img.addEventListener("click", function () {
+          // 如果已经是放大状态，则恢复原状
+          if (this.classList.contains("zoomed")) {
+            this.classList.remove("zoomed");
+          }
+          // 否则放大图片
+          else {
+            // 先收起其他已放大的图片
+            document
+              .querySelectorAll(".zoomed")
+              .forEach((el) => el.classList.remove("zoomed"));
+            // 放大当前图片
+            this.classList.add("zoomed");
+          }
+        });
+      });
+
+      // 点击空白处收起放大的图片
+      document.addEventListener("click", function (e) {
+        if (!e.target.classList.contains("article-image")) {
+          document
+            .querySelectorAll(".zoomed")
+            .forEach((el) => el.classList.remove("zoomed"));
+        }
+      });
+    </script>
+  </body>
+</html>

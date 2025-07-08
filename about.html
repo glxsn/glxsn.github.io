@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于关于 | 给力小少年</title>
+    <link rel="stylesheet" href="./css/main.css">
+    <style>
+        /* 文章卡片 - 圆润风格 */
+        .article-card {
+            background: var(--card-bg);
+            padding: 50px;
+            margin-bottom: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        .article-card:hover {
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .article-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+            text-align: center;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .article-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--highlight));
+            border-radius: 3px;
+        }
+
+        .article-meta {
+            color: var(--text-light);
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 1rem;
+        }
+
+        .article-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text);
+        }
+
+        .article-content p {
+            margin-bottom: 25px;
+        }
+
+        .article-content h2 {
+            font-size: 1.8rem;
+            margin: 40px 0 20px;
+            color: var(--primary);
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .article-content h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--highlight);
+            border-radius: 3px;
+        }
+
+        /* 返回按钮 - 圆润风格 */
+        .back-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            margin-top: 40px;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(125, 157, 202, 0.3);
+        }
+
+        .back-btn:hover {
+            background-color: #6a8fc1;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(125, 157, 202, 0.4);
+        }
+
+        .back-btn-container {
+            text-align: center;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+
+
+            .article-card {
+                padding: 30px;
+            }
+
+            .article-title {
+                font-size: 2rem;
+                margin-top: 10px;
+            }
+
+            .nav-toggle.active span:nth-child(1) {
+                transform: rotate(45deg) translate(5px, 5px);
+            }
+
+            .nav-toggle.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .nav-toggle.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(7px, -6px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="header-container">  
+            <nav>
+                <ul>
+                    <li><a href="index.html">首页</a></li>
+                    <li><a href="about.html" class="active">关于</a></li>
+                    <li><a href="dh.html">作品</a></li>
+                    <li><a href="#">联系</a></li>
+                  </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="article-card">
+            <h1 class="article-title">关于关于</h1>
+            <div class="article-meta">
+                发布日期：2025年6月17日 | 作者：给力小少年
+            </div>
+            <div class="article-content">
+                <!-- 保留原有文章内容 -->
+                <p>只是简单的聊聊</p>
+
+                <h2>为什么会想做这个板块？</h2>
+                <p>使用电脑在互联网中冲浪，难免会遇到许多各式各样的问题。在ai使用门槛变低及其效果"猛地"变好之前，寻找问题答案的路总是坎坷且危险的，但这也塑造了一批善于思考、辨别是非的网民。
+                    现在，ai的使用门槛大大降低，效果也比较不错，这使得越来越多的人依赖于ai，认为其能代替人们解决绝大多数问题。但其实，在游戏、程序、脚本等各种问题上，你我皆是先行者。ai为后人总
+                    结出的答案，皆是从你我脑中发芽。</p>
+
+                <h2>下一步</h2>
+                <p>会完善哒</p>
+
+                <p>这里是文章的结尾部分...</p>
+            </div>
+
+            <div class="back-btn-container">
+                <a href="index.html" class="back-btn">返回首页</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>头发掉光光啦</p>
+    </footer>
+
+</body>
+
+</html>
