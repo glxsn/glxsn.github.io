@@ -14,7 +14,6 @@
       href="https://img.zmal.top/frined/57de5ad8ef1705f8fc15a83aa4de2706_720.4ub7p2t8cl.jpg"
       type="image/x-icon"
     />
-    <link rel="stylesheet" href="./css/search.css" />
     <style>
       .article-list {
         display: grid;
@@ -79,11 +78,9 @@
         box-shadow: 0 4px 10px rgba(125, 157, 202, 0.3);
       }
 
-      /* 主要内容区 - 增加顶部内边距 */
       .container {
         max-width: 1000px;
         margin: 60px auto 40px;
-        /* 增加上边距 */
         padding: 0 30px;
         flex: 1;
       }
@@ -112,7 +109,6 @@
         border-radius: 3px;
       }
 
-      /* 卡片式内容区块 */
       .card {
         background: var(--card-bg);
         padding: 40px;
@@ -154,7 +150,6 @@
         line-height: 1.8;
       }
 
-      /* 响应式设计 - 手机端优化 */
       @media (max-width: 768px) {
         .card h2 {
           font-size: 1.5rem;
@@ -173,7 +168,6 @@
         }
       }
 
-      /* 动画效果 */
       @keyframes fadeIn {
         from {
           opacity: 0;
@@ -191,7 +185,6 @@
         opacity: 0;
       }
 
-      /* 新增：优化标题位置 */
       .title-container {
         margin-top: 30px;
         margin-bottom: 20px;
@@ -200,9 +193,118 @@
       @media (max-width: 768px) {
         .title-container {
           margin-top: 40px;
-          /* 增加移动端上边距 */
           margin-bottom: 15px;
         }
+      }
+
+      /* 新增搜索相关样式 */
+      .search-container {
+        position: relative;
+      }
+
+      .search-box {
+        display: flex;
+        align-items: center;
+      }
+
+      .search-input {
+        padding: 8px 15px;
+        border-radius: 20px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        width: 200px;
+        transition: all 0.3s ease;
+      }
+
+      .search-input:focus {
+        outline: none;
+        width: 250px;
+        border-color: var(--primary);
+      }
+
+      .search-btn {
+        background: none;
+        border: none;
+        margin-left: -30px;
+        cursor: pointer;
+        color: var(--primary);
+      }
+
+      .search-results {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--card-bg);
+        border-radius: 0 0 10px 10px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        max-height: 400px;
+        overflow-y: auto;
+        z-index: 1000;
+        display: none;
+        padding: 10px;
+      }
+
+      .search-results-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 10px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      }
+
+      .search-results-header h3 {
+        margin: 0;
+        font-size: 1rem;
+        color: var(--primary);
+      }
+
+      .close-search {
+        background: none;
+        border: none;
+        color: #888;
+        cursor: pointer;
+      }
+
+      .search-result-item {
+        padding: 10px;
+        margin-bottom: 5px;
+        border-radius: 5px;
+        transition: all 0.2s ease;
+      }
+
+      .search-result-item:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+
+      .search-result-title {
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: var(--primary);
+      }
+
+      .search-result-excerpt {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 5px;
+      }
+
+      .search-result-source {
+        font-size: 0.8rem;
+        color: #888;
+      }
+
+      .no-results {
+        padding: 15px;
+        text-align: center;
+        color: var(--text-light);
+      }
+
+      .highlight {
+        background-color: #ffeb3b;
+        font-weight: bold;
+        padding: 0 2px;
+        border-radius: 2px;
       }
     </style>
   </head>
@@ -235,9 +337,7 @@
                   <i class="fas fa-times"></i>
                 </button>
               </div>
-              <div class="article-list" id="resultsContainer">
-                <!-- 搜索结果将在这里显示为卡片 -->
-              </div>
+              <div id="resultsContainer"></div>
             </div>
           </div>
         </div>
@@ -282,78 +382,62 @@
     </footer>
 
     <script>
-      // 页面加载完成后执行初始化
       document.addEventListener("DOMContentLoaded", function () {
-        // 导航栏选中效果
-        document.querySelectorAll("nav a").forEach((link) => {
-          link.addEventListener("click", function () {
-            document
-              .querySelectorAll("nav a")
-              .forEach((a) => a.classList.remove("active"));
-            this.classList.add("active");
-          });
-        });
-
-        // 搜索功能实现
         const searchInput = document.getElementById("searchInput");
         const searchBtn = document.getElementById("searchBtn");
         const searchResults = document.getElementById("searchResults");
         const resultsContainer = document.getElementById("resultsContainer");
         const closeSearch = document.getElementById("closeSearch");
-        const header = document.getElementById("mainHeader");
-        const container = document.getElementById("contentContainer");
 
         // 要搜索的页面列表
         const pagesToSearch = ["index.html", "about.html", "dh.html"];
 
-        // 从DOM动态获取文章数据
-        function getArticlesFromDOM(htmlContent, pageUrl) {
+        // 从DOM解析文章数据
+        function parseArticles(htmlContent, pageUrl) {
           const parser = new DOMParser();
           const doc = parser.parseFromString(htmlContent, "text/html");
 
-          return Array.from(doc.querySelectorAll(".card")).map((card, index) => ({
-            id: card.id || `card-${index}`, // 使用已有ID或生成一个
-            title: card.querySelector("h2")?.textContent || "无标题",
-            content: Array.from(card.querySelectorAll("p"))
+          return Array.from(doc.querySelectorAll(".card")).map((card, index) => {
+            const title = card.querySelector("h2")?.textContent || "无标题";
+            const content = Array.from(card.querySelectorAll("p"))
               .map((p) => p.textContent)
-              .join(" "),
-            url: pageUrl,
-            excerpt:
-              Array.from(card.querySelectorAll("p"))
-                .map((p) => p.textContent)
-                .join(" ")
-                .substring(0, 100) + "...",
-          }));
+              .join(" ");
+
+            return {
+              id: card.id || `card-${index}`,
+              title,
+              content,
+              url: pageUrl,
+              excerpt:
+                content.substring(0, 100) + (content.length > 100 ? "..." : ""),
+            };
+          });
         }
 
-        // 获取所有页面的文章数据
+        // 获取所有文章数据
         async function getAllArticles() {
           let allArticles = [];
+          const currentPage =
+            window.location.pathname.split("/").pop() || "index.html";
 
-          // 首先添加当前页面的文章
-          const currentPageArticles = getArticlesFromDOM(
+          // 获取当前页面的文章
+          const currentPageArticles = parseArticles(
             document.documentElement.outerHTML,
-            window.location.pathname.split("/").pop() || "index.html"
+            currentPage
           );
-          allArticles = allArticles.concat(currentPageArticles);
+          allArticles = [...currentPageArticles];
 
           // 获取其他页面的文章
           for (const page of pagesToSearch) {
-            // 跳过当前页面
-            if (
-              page ===
-              (window.location.pathname.split("/").pop() || "index.html")
-            ) {
-              continue;
-            }
-
+            if (page === currentPage) continue;
+            
             try {
               const response = await fetch(page);
               if (!response.ok) continue;
-
+              
               const html = await response.text();
-              const articles = getArticlesFromDOM(html, page);
-              allArticles = allArticles.concat(articles);
+              const articles = parseArticles(html, page);
+              allArticles.push(...articles);
             } catch (error) {
               console.error(`获取页面 ${page} 失败:`, error);
             }
@@ -365,7 +449,7 @@
         // 执行搜索
         async function performSearch() {
           const query = searchInput.value.trim().toLowerCase();
-
+          
           if (!query) {
             searchResults.style.display = "none";
             return;
@@ -375,18 +459,20 @@
           resultsContainer.innerHTML = '<div class="no-results">搜索中...</div>';
           searchResults.style.display = "block";
 
-          // 获取所有文章
-          const articles = await getAllArticles();
-
-          // 搜索逻辑
-          const results = articles.filter((article) => {
-            return (
-              article.title.toLowerCase().includes(query) ||
-              article.content.toLowerCase().includes(query)
+          try {
+            const articles = await getAllArticles();
+            const results = articles.filter(
+              (article) =>
+                article.title.toLowerCase().includes(query) ||
+                article.content.toLowerCase().includes(query)
             );
-          });
-
-          displayResults(results);
+            
+            displayResults(results);
+          } catch (error) {
+            console.error("搜索出错:", error);
+            resultsContainer.innerHTML =
+              '<div class="no-results">搜索失败，请重试</div>';
+          }
         }
 
         // 显示搜索结果
@@ -396,7 +482,6 @@
           if (results.length === 0) {
             resultsContainer.innerHTML =
               '<div class="no-results">没有找到相关文章</div>';
-            searchResults.style.display = "block";
             return;
           }
 
@@ -404,22 +489,18 @@
             const resultItem = document.createElement("div");
             resultItem.className = "search-result-item";
             resultItem.innerHTML = `
-              <a href="${article.url}#${article.id}" style="text-decoration: none; color: inherit;">
-                <div class="search-result-title">${highlightText(
-                  article.title,
-                  searchInput.value
-                )}</div>
-                <div class="search-result-excerpt">${highlightText(
-                  article.excerpt,
-                  searchInput.value
-                )}</div>
-                <div class="search-result-source">来自: ${article.url}</div>
-              </a>
+              <div class="search-result-title">${highlightText(
+                article.title,
+                searchInput.value
+              )}</div>
+              <div class="search-result-excerpt">${highlightText(
+                article.excerpt,
+                searchInput.value
+              )}</div>
+              <div class="search-result-source">来自: ${article.url}</div>
             `;
             resultsContainer.appendChild(resultItem);
           });
-
-          searchResults.style.display = "block";
         }
 
         // 高亮显示匹配文本
@@ -429,83 +510,37 @@
           const regex = new RegExp(escapedQuery, "gi");
           return text.replace(
             regex,
-            (match) => `<span style="background-color: #ffeb3b;">${match}</span>`
+            (match) => `<span class="highlight">${match}</span>`
           );
+        }
+
+        // 防抖函数
+        function debounce(func, delay) {
+          let timer;
+          return function () {
+            clearTimeout(timer);
+            timer = setTimeout(() => func.apply(this, arguments), delay);
+          };
         }
 
         // 事件监听
         searchBtn.addEventListener("click", performSearch);
-        searchInput.addEventListener("input", function () {
-          clearTimeout(this.timer);
-          this.timer = setTimeout(performSearch, 500);
-        });
-        searchInput.addEventListener("keypress", function (e) {
+        searchInput.addEventListener("input", debounce(performSearch, 300));
+        searchInput.addEventListener("keypress", (e) => {
           if (e.key === "Enter") performSearch();
+        });
+        closeSearch.addEventListener("click", () => {
+          searchResults.style.display = "none";
         });
 
         // 点击页面其他地方关闭搜索结果
-        document.addEventListener("click", function (e) {
-          if (!e.target.closest(".search-container")) {
+        document.addEventListener("click", (e) => {
+          if (
+            !e.target.closest(".search-container") &&
+            !e.target.closest(".search-results")
+          ) {
             searchResults.style.display = "none";
           }
-        });
-
-        // 平滑的移动端导航栏滚动效果
-        let lastScrollTop = 0;
-        let isAnimating = false;
-        const scrollThreshold = 5; // 滚动阈值，避免微小滚动
-
-        // 动态调整内容容器上边距（仅移动端）
-        function adjustContainerMargin() {
-          if (window.innerWidth <= 768) {
-            const headerHeight = header.offsetHeight;
-            container.style.marginTop = headerHeight + "px";
-          } else {
-            // 电脑端不需要调整
-            container.style.marginTop = "";
-          }
-        }
-
-        // 初始化时调整边距
-        adjustContainerMargin();
-
-        // 监听窗口大小变化
-        window.addEventListener("resize", adjustContainerMargin);
-
-        // 监听滚动事件
-        window.addEventListener("scroll", function () {
-          if (window.innerWidth > 768) {
-            // 电脑端不需要滚动隐藏效果
-            return;
-          }
-
-          // 使用requestAnimationFrame确保流畅
-          if (isAnimating) return;
-
-          isAnimating = true;
-          requestAnimationFrame(() => {
-            const scrollTop =
-              window.pageYOffset || document.documentElement.scrollTop;
-
-            // 增加滚动阈值检测
-            const scrollDelta = Math.abs(scrollTop - lastScrollTop);
-            if (scrollDelta < scrollThreshold) {
-              isAnimating = false;
-              return;
-            }
-
-            // 向下滚动超过100px时隐藏导航栏
-            if (scrollTop > lastScrollTop && scrollTop > 100) {
-              header.classList.add("header-hidden");
-            }
-            // 向上滚动时显示导航栏
-            else if (scrollTop < lastScrollTop) {
-              header.classList.remove("header-hidden");
-            }
-
-            lastScrollTop = scrollTop;
-            isAnimating = false;
-          });
         });
       });
     </script>
