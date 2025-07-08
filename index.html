@@ -205,34 +205,37 @@
         }
       }
 
-      /* 搜索相关样式 */
-      .search-results {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        max-height: 400px;
-        overflow-y: auto;
-        background: var(--card-bg);
-        border-radius: 0 0 15px 15px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        z-index: 1000;
-        display: none;
-        padding: 15px;
+      /* 搜索结果高亮样式 */
+      .search-highlight {
+        background-color: #ffeb3b;
+        padding: 2px 0;
+        border-radius: 3px;
+        animation: highlightFade 2s ease-out;
       }
 
+      @keyframes highlightFade {
+        from {
+          background-color: #ffeb3b;
+        }
+        to {
+          background-color: transparent;
+        }
+      }
+
+      /* 搜索结果样式 */
       .search-result-item {
-        padding: 12px;
+        padding: 15px;
         border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         transition: all 0.2s ease;
       }
 
       .search-result-item:hover {
-        background: rgba(0, 0, 0, 0.02);
+        background-color: rgba(0, 0, 0, 0.02);
       }
 
       .search-result-title {
         font-weight: bold;
+        font-size: 1.1rem;
         margin-bottom: 5px;
         color: var(--primary);
       }
@@ -241,31 +244,60 @@
         font-size: 0.9rem;
         color: var(--text-light);
         margin-bottom: 5px;
+        line-height: 1.5;
       }
 
       .search-result-source {
         font-size: 0.8rem;
-        color: var(--text-lighter);
+        color: #888;
+        font-style: italic;
       }
 
       .highlight {
-        background-color: rgba(255, 235, 59, 0.3);
-        padding: 0 2px;
-        border-radius: 2px;
+        background-color: #ffeb3b;
+        font-weight: bold;
       }
 
-      .search-highlight {
-        animation: highlightFade 2s ease-out;
-        background-color: rgba(255, 235, 59, 0.5);
+      .no-results {
+        padding: 20px;
+        text-align: center;
+        color: var(--text-light);
       }
 
-      @keyframes highlightFade {
-        0% {
-          background-color: rgba(255, 235, 59, 0.8);
-        }
-        100% {
-          background-color: rgba(255, 235, 59, 0);
-        }
+      .search-results {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--card-bg);
+        border-radius: 0 0 15px 15px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        max-height: 400px;
+        overflow-y: auto;
+        z-index: 1000;
+        display: none;
+      }
+
+      .search-results-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 15px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      }
+
+      .search-results-header h3 {
+        margin: 0;
+        font-size: 1rem;
+        color: var(--primary);
+      }
+
+      .close-search {
+        background: none;
+        border: none;
+        color: #888;
+        cursor: pointer;
+        font-size: 1.2rem;
       }
     </style>
   </head>
@@ -353,7 +385,7 @@
         const searchResults = document.getElementById("searchResults");
         const resultsContainer = document.getElementById("resultsContainer");
         const closeSearch = document.getElementById("closeSearch");
-        const contentContainer = document.getElementById("contentContainer");
+        const container = document.querySelector(".container");
 
         // 要搜索的页面列表
         const pagesToSearch = ["index.html", "about.html", "dh.html"];
@@ -482,7 +514,7 @@
             const resultItem = document.createElement("div");
             resultItem.className = "search-result-item";
             resultItem.innerHTML = `
-              <a href="${article.url}#${article.id}" class="search-result-link" data-id="${article.id}" data-page="${article.url}">
+              <a href="${article.url}#${article.id}" class="search-result-link" data-query="${encodeURIComponent(searchInput.value)}">
                 <div class="search-result-title">${highlightText(
                   article.title,
                   searchInput.value
@@ -491,67 +523,15 @@
                   article.excerpt,
                   searchInput.value
                 )}</div>
-                <div class="search-result-source">来自: ${article.url}</div>
+                <div class="search-result-source">来自: ${
+                  article.url
+                }</div>
               </a>
             `;
             resultsContainer.appendChild(resultItem);
           });
 
-          // 添加点击事件监听
-          document.querySelectorAll('.search-result-link').forEach(link => {
-            link.addEventListener('click', function(e) {
-              e.preventDefault();
-              const targetPage = this.getAttribute('data-page');
-              const targetId = this.getAttribute('data-id');
-              
-              if (targetPage === window.location.pathname.split('/').pop() || 
-                  (targetPage === 'index.html' && window.location.pathname.endsWith('/'))) {
-                // 当前页面，直接滚动到目标位置
-                scrollToElement(targetId, searchInput.value);
-                searchResults.style.display = 'none';
-              } else {
-                // 其他页面，保存搜索词并跳转
-                sessionStorage.setItem('searchHighlight', searchInput.value);
-                sessionStorage.setItem('scrollTo', targetId);
-                window.location.href = this.getAttribute('href');
-              }
-            });
-          });
-
           searchResults.style.display = "block";
-        }
-
-        // 滚动到指定元素并高亮
-        function scrollToElement(elementId, highlightText) {
-          const element = document.getElementById(elementId);
-          if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
-            
-            // 高亮显示匹配文本
-            if (highlightText) {
-              highlightElementText(element, highlightText);
-            }
-          }
-        }
-
-        // 高亮元素中的文本
-        function highlightElementText(element, text) {
-          const escapedText = text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-          const regex = new RegExp(escapedText, 'gi');
-          
-          // 临时移除动画类
-          element.classList.remove('search-highlight');
-          
-          // 触发重绘
-          void element.offsetWidth;
-          
-          // 添加动画类
-          element.classList.add('search-highlight');
-          
-          // 3秒后移除动画类
-          setTimeout(() => {
-            element.classList.remove('search-highlight');
-          }, 2000);
         }
 
         // 高亮显示匹配文本
@@ -567,29 +547,6 @@
           );
         }
 
-        // 检查URL中是否有高亮标记
-        function checkUrlForHighlight() {
-          const hash = window.location.hash.substring(1);
-          const searchHighlight = sessionStorage.getItem('searchHighlight');
-          const scrollTo = sessionStorage.getItem('scrollTo');
-          
-          if (scrollTo && scrollTo === hash) {
-            // 清除存储的值
-            sessionStorage.removeItem('searchHighlight');
-            sessionStorage.removeItem('scrollTo');
-            
-            // 滚动到目标位置并高亮
-            setTimeout(() => {
-              scrollToElement(scrollTo, searchHighlight);
-            }, 300);
-          } else if (hash) {
-            // 普通锚点跳转
-            setTimeout(() => {
-              scrollToElement(hash);
-            }, 300);
-          }
-        }
-
         // 防抖函数
         function debounce(func, delay) {
           let timer;
@@ -599,6 +556,56 @@
           };
         }
 
+        // 检查URL中是否有高亮标记
+        function checkUrlForHighlight() {
+          const hash = window.location.hash.substring(1);
+          const urlParams = new URLSearchParams(window.location.search);
+          const searchQuery = urlParams.get("q");
+
+          if (hash) {
+            const targetElement = document.getElementById(hash);
+            if (targetElement) {
+              // 平滑滚动到目标元素
+              targetElement.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+              });
+
+              // 添加高亮效果
+              if (searchQuery) {
+                setTimeout(() => {
+                  highlightElement(targetElement, searchQuery);
+                }, 500);
+              }
+            }
+          }
+        }
+
+        // 高亮元素内容
+        function highlightElement(element, query) {
+          if (!query) return;
+
+          // 高亮标题
+          const title = element.querySelector("h2");
+          if (title) {
+            title.innerHTML = highlightText(title.textContent, query);
+          }
+
+          // 高亮段落
+          const paragraphs = element.querySelectorAll("p");
+          paragraphs.forEach((p) => {
+            p.innerHTML = highlightText(p.textContent, query);
+          });
+
+          // 添加临时高亮背景
+          element.classList.add("search-highlight");
+
+          // 3秒后移除高亮背景
+          setTimeout(() => {
+            element.classList.remove("search-highlight");
+          }, 3000);
+        }
+
         // 事件监听
         searchBtn.addEventListener("click", performSearch);
         searchInput.addEventListener("input", performSearch);
@@ -606,13 +613,39 @@
           if (e.key === "Enter") performSearch();
         });
 
-        closeSearch.addEventListener("click", function(e) {
-          e.stopPropagation();
+        closeSearch.addEventListener("click", function () {
           searchResults.style.display = "none";
         });
 
-        // 点击页面其他地方关闭搜索结果
+        // 处理搜索结果点击
         document.addEventListener("click", function (e) {
+          // 点击搜索结果链接
+          if (e.target.closest(".search-result-link")) {
+            e.preventDefault();
+            const link = e.target.closest(".search-result-link");
+            const targetUrl = link.getAttribute("href");
+            const query = link.getAttribute("data-query");
+            
+            // 如果是当前页面
+            if (targetUrl.startsWith(window.location.pathname) {
+              const hash = targetUrl.split("#")[1];
+              window.location.hash = hash;
+              if (query) {
+                const targetElement = document.getElementById(hash);
+                if (targetElement) {
+                  highlightElement(targetElement, query);
+                }
+              }
+            } else {
+              // 如果是其他页面，添加查询参数
+              const newUrl = targetUrl + (query ? `?q=${query}` : "");
+              window.location.href = newUrl;
+            }
+            
+            searchResults.style.display = "none";
+          }
+          
+          // 点击页面其他地方关闭搜索结果
           if (
             !e.target.closest(".search-container") &&
             !e.target.closest(".search-results")
