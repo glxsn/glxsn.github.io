@@ -200,6 +200,7 @@
       /* 新增搜索相关样式 */
       .search-container {
         position: relative;
+        margin-left: auto;
       }
 
       .search-box {
@@ -305,6 +306,71 @@
         font-weight: bold;
         padding: 0 2px;
         border-radius: 2px;
+      }
+
+      /* 修改导航栏布局 */
+      #mainHeader nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      #mainHeader nav ul {
+        display: flex;
+        margin: 0 auto;
+        padding: 0;
+        list-style: none;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      #mainHeader nav ul li {
+        margin: 0 15px;
+      }
+
+      #mainHeader nav ul li a {
+        color: var(--text);
+        text-decoration: none;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        padding: 5px 10px;
+        border-radius: 5px;
+      }
+
+      #mainHeader nav ul li a:hover,
+      #mainHeader nav ul li a.active {
+        color: var(--primary);
+        background-color: rgba(125, 157, 202, 0.1);
+      }
+
+      @media (max-width: 768px) {
+        #mainHeader nav {
+          flex-direction: column;
+          padding: 10px;
+        }
+        
+        #mainHeader nav ul {
+          position: static;
+          transform: none;
+          margin: 10px 0;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+        
+        .search-container {
+          margin-left: 0;
+          width: 100%;
+          margin-top: 10px;
+        }
+        
+        .search-input {
+          width: 100%;
+        }
       }
     </style>
   </head>
