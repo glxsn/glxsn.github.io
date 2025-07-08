@@ -282,202 +282,147 @@
     </footer>
 
     <script>
-      // 页面加载完成后执行初始化
-      document.addEventListener("DOMContentLoaded", function () {
-        // 缓存常用DOM元素
-        
-        const searchInput = document.getElementById("searchInput");
-        const searchBtn = document.getElementById("searchBtn");
-        const searchResults = document.getElementById("searchResults");
-        const header = document.getElementById("header");
-        const container = document.querySelector(".container");
-
-        // 要搜索的页面列表
-        const pagesToSearch = ["index.html", "about.html", "dh.html"];
-
-        // 文章数据缓存（避免重复请求）
-        let articlesCache = null;
-
-        // 从DOM解析文章数据
-        function parseArticles(htmlContent, pageUrl) {
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(htmlContent, "text/html");
-
-          return Array.from(doc.querySelectorAll(".card")).map(
-            (card, index) => {
-              const title = card.querySelector("h2")?.textContent || "无标题";
-              const content = Array.from(card.querySelectorAll("p"))
-                .map((p) => p.textContent)
-                .join(" ");
-
-              return {
-                id: card.id || `card-${index}`,
-                title,
-                content,
-                url: pageUrl,
-                excerpt:
-                  content.substring(0, 100) +
-                  (content.length > 100 ? "..." : ""),
-              };
-            }
-          );
-        }
-
-        // 获取所有文章数据（带缓存）
-        async function getAllArticles() {
-          // 如果缓存存在且有效，直接返回
-          if (articlesCache) return articlesCache;
-
-          let allArticles = [];
-          const currentPage =
-            window.location.pathname.split("/").pop() || "index.html";
-
-          // 获取当前页面的文章
-          const currentPageArticles = parseArticles(
-            document.documentElement.outerHTML,
-            currentPage
-          );
-          allArticles = [...currentPageArticles];
-
-          // 获取其他页面的文章
-          const fetchPromises = pagesToSearch
-            .filter((page) => page !== currentPage)
-            .map(async (page) => {
-              try {
-                const response = await fetch(page);
-                if (!response.ok) return [];
-
-                const html = await response.text();
-                return parseArticles(html, page);
-              } catch (error) {
-                console.error(`获取页面 ${page} 失败:`, error);
-                return [];
-              }
+        // 导航栏选中效果
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', function() {
+                document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+                this.classList.add('active');
             });
-
-          // 并行获取所有页面
-          const results = await Promise.all(fetchPromises);
-          results.forEach((articles) => allArticles.push(...articles));
-
-          // 缓存结果（5分钟有效期）
-          articlesCache = allArticles;
-          setTimeout(() => {
-            articlesCache = null;
-          }, 5 * 60 * 1000);
-
-          return allArticles;
-        }
-
-        // 执行搜索（带防抖）
-        const performSearch = debounce(async function () {
-          const query = searchInput.value.trim().toLowerCase();
-
-          if (!query) {
-            searchResults.style.display = "none";
-            return;
-          }
-
-          // 显示加载状态
-          searchResults.innerHTML = '<div class="no-results">搜索中...</div>';
-          searchResults.style.display = "block";
-
-          try {
-            const articles = await getAllArticles();
-            const results = filterArticles(articles, query);
-            displayResults(results);
-          } catch (error) {
-            console.error("搜索出错:", error);
-            searchResults.innerHTML =
-              '<div class="no-results">搜索失败，请重试</div>';
-          }
-        }, 300);
-
-        // 文章过滤逻辑
-        function filterArticles(articles, query) {
-          return articles.filter(
-            (article) =>
-              article.title.toLowerCase().includes(query) ||
-              article.content.toLowerCase().includes(query)
-          );
-        }
-
-        // 显示搜索结果
-        function displayResults(results) {
-          searchResults.innerHTML = "";
-
-          if (results.length === 0) {
-            searchResults.innerHTML =
-              '<div class="no-results">没有找到相关文章</div>';
-            searchResults.style.display = "block";
-            return;
-          }
-
-          results.forEach((article) => {
-            const resultItem = document.createElement("div");
-            resultItem.className = "search-result-item";
-            resultItem.innerHTML = `
-                        <a href="${article.url}#${
-              article.id
-            }" style="text-decoration: none; color: inherit;">
-                            <div class="search-result-title">${highlightText(
-                              article.title,
-                              searchInput.value
-                            )}</div>
-                            <div class="search-result-excerpt">${highlightText(
-                              article.excerpt,
-                              searchInput.value
-                            )}</div>
-                            <div class="search-result-source">来自: ${
-                              article.url
-                            }</div>
+        });
+        
+        // 搜索功能实现（动态扫描所有页面内容）
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const searchBtn = document.getElementById('searchBtn');
+            const searchResults = document.getElementById('searchResults');
+            const header = document.getElementById('mainHeader');
+            const container = document.getElementById('contentContainer');
+            
+            // 要搜索的页面列表
+            const pagesToSearch = ['index.html', 'bi.html', 'dh.html'];
+            
+            // 从DOM动态获取文章数据
+            function getArticlesFromDOM(htmlContent, pageUrl) {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(htmlContent, 'text/html');
+                
+                return Array.from(doc.querySelectorAll('.card')).map((card, index) => ({
+                    id: card.id || `card-${index}`,  // 使用已有ID或生成一个
+                    title: card.querySelector('h2')?.textContent || '无标题',
+                    content: Array.from(card.querySelectorAll('p'))
+                               .map(p => p.textContent).join(' '),
+                    url: pageUrl,
+                    excerpt: Array.from(card.querySelectorAll('p'))
+                               .map(p => p.textContent).join(' ').substring(0, 100) + '...'
+                }));
+            }
+            
+            // 获取所有页面的文章数据
+            async function getAllArticles() {
+                let allArticles = [];
+                
+                // 首先添加当前页面的文章
+                const currentPageArticles = getArticlesFromDOM(document.documentElement.outerHTML, window.location.pathname.split('/').pop() || 'index.html');
+                allArticles = allArticles.concat(currentPageArticles);
+                
+                // 获取其他页面的文章
+                for (const page of pagesToSearch) {
+                    // 跳过当前页面
+                    if (page === (window.location.pathname.split('/').pop() || 'index.html')) {
+                        continue;
+                    }
+                    
+                    try {
+                        const response = await fetch(page);
+                        if (!response.ok) continue;
+                        
+                        const html = await response.text();
+                        const articles = getArticlesFromDOM(html, page);
+                        allArticles = allArticles.concat(articles);
+                    } catch (error) {
+                        console.error(`获取页面 ${page} 失败:`, error);
+                    }
+                }
+                
+                return allArticles;
+            }
+            
+            // 执行搜索
+            async function performSearch() {
+                const query = searchInput.value.trim().toLowerCase();
+                
+                if (!query) {
+                    searchResults.style.display = 'none';
+                    return;
+                }
+                
+                // 显示加载状态
+                searchResults.innerHTML = '<div class="no-results">搜索中...</div>';
+                searchResults.style.display = 'block';
+                
+                // 获取所有文章
+                const articles = await getAllArticles();
+                
+                // 搜索逻辑
+                const results = articles.filter(article => {
+                    return article.title.toLowerCase().includes(query) || 
+                           article.content.toLowerCase().includes(query);
+                });
+                
+                displayResults(results);
+            }
+            
+            // 显示搜索结果
+            function displayResults(results) {
+                searchResults.innerHTML = '';
+                
+                if (results.length === 0) {
+                    searchResults.innerHTML = '<div class="no-results">没有找到相关文章</div>';
+                    searchResults.style.display = 'block';
+                    return;
+                }
+                
+                results.forEach(article => {
+                    const resultItem = document.createElement('div');
+                    resultItem.className = 'search-result-item';
+                    resultItem.innerHTML = `
+                        <a href="${article.url}#${article.id}" style="text-decoration: none; color: inherit;">
+                            <div class="search-result-title">${highlightText(article.title, searchInput.value)}</div>
+                            <div class="search-result-excerpt">${highlightText(article.excerpt, searchInput.value)}</div>
+                            <div class="search-result-source">来自: ${article.url}</div>
                         </a>
                     `;
-            searchResults.appendChild(resultItem);
-          });
-
-          searchResults.style.display = "block";
-        }
-
-        // 高亮显示匹配文本
-        function highlightText(text, query) {
-          if (!query) return text;
-
-          const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-          const regex = new RegExp(escapedQuery, "gi");
-
-          return text.replace(
-            regex,
-            (match) => `<span class="highlight">${match}</span>`
-          );
-        }
-
-        // 防抖函数
-        function debounce(func, delay) {
-          let timer;
-          return function () {
-            clearTimeout(timer);
-            timer = setTimeout(() => func.apply(this, arguments), delay);
-          };
-        }
-
-        // 事件监听
-        searchBtn.addEventListener("click", performSearch);
-        searchInput.addEventListener("input", performSearch);
-        searchInput.addEventListener("keypress", function (e) {
-          if (e.key === "Enter") performSearch();
+                    searchResults.appendChild(resultItem);
+                });
+                
+                searchResults.style.display = 'block';
+            }
+            
+            // 高亮显示匹配文本
+            function highlightText(text, query) {
+                if (!query) return text;
+                const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                const regex = new RegExp(escapedQuery, 'gi');
+                return text.replace(regex, match => `<span style="background-color: #ffeb3b;">${match}</span>`);
+            }
+            
+            // 事件监听
+            searchBtn.addEventListener('click', performSearch);
+            searchInput.addEventListener('input', function() {
+                clearTimeout(this.timer);
+                this.timer = setTimeout(performSearch, 500);
+            });
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') performSearch();
+            });
+            
+            // 点击页面其他地方关闭搜索结果
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.search-container')) {
+                    searchResults.style.display = 'none';
+                }
+            });
         });
-
-        // 点击页面其他地方关闭搜索结果
-        document.addEventListener("click", function (e) {
-          if (
-            !e.target.closest(".search-container") &&
-            !e.target.closest(".search-results")
-          ) {
-            searchResults.style.display = "none";
-          }
-        });
-        
-      });
     </script>
   </body>
 </html>
