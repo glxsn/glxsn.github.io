@@ -15,6 +15,43 @@
       type="image/x-icon"
     />
     <style>
+      /* 修改导航栏布局 */
+      nav {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        width: 100%;
+      }
+
+      nav ul {
+        display: flex;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .search-container {
+        position: absolute;
+        right: 30px;
+      }
+
+      nav ul li a {
+        padding: 10px 15px;
+        text-decoration: none;
+        color: var(--text);
+        transition: all 0.3s ease;
+      }
+
+      nav ul li a:hover {
+        color: var(--primary);
+      }
+
+      nav ul li a.active {
+        color: var(--primary);
+        font-weight: bold;
+      }
+
       .article-list {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -166,6 +203,23 @@
         .article-list {
           grid-template-columns: 1fr;
         }
+
+        /* 移动端调整导航布局 */
+        nav {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .search-container {
+          position: static;
+          margin-top: 15px;
+          margin-left: 0;
+          width: 100%;
+        }
+
+        .search-input {
+          width: 100% !important;
+        }
       }
 
       @keyframes fadeIn {
@@ -197,12 +251,7 @@
         }
       }
 
-      /* 新增搜索相关样式 */
-      .search-container {
-        position: relative;
-        margin-left: auto;
-      }
-
+      /* 搜索相关样式 */
       .search-box {
         display: flex;
         align-items: center;
@@ -307,7 +356,6 @@
         font-weight: bold;
         padding: 0 2px;
         border-radius: 2px;
-        }
       }
     </style>
   </head>
