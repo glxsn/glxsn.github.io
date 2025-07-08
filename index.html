@@ -79,9 +79,11 @@
         box-shadow: 0 4px 10px rgba(125, 157, 202, 0.3);
       }
 
+      /* 主要内容区 - 增加顶部内边距 */
       .container {
         max-width: 1000px;
         margin: 60px auto 40px;
+        /* 增加上边距 */
         padding: 0 30px;
         flex: 1;
       }
@@ -110,6 +112,7 @@
         border-radius: 3px;
       }
 
+      /* 卡片式内容区块 */
       .card {
         background: var(--card-bg);
         padding: 40px;
@@ -151,6 +154,7 @@
         line-height: 1.8;
       }
 
+      /* 响应式设计 - 手机端优化 */
       @media (max-width: 768px) {
         .card h2 {
           font-size: 1.5rem;
@@ -169,6 +173,7 @@
         }
       }
 
+      /* 动画效果 */
       @keyframes fadeIn {
         from {
           opacity: 0;
@@ -186,6 +191,7 @@
         opacity: 0;
       }
 
+      /* 新增：优化标题位置 */
       .title-container {
         margin-top: 30px;
         margin-bottom: 20px;
@@ -194,75 +200,35 @@
       @media (max-width: 768px) {
         .title-container {
           margin-top: 40px;
+          /* 增加移动端上边距 */
           margin-bottom: 15px;
         }
       }
 
-      .search-container {
-        position: relative;
-      }
-
-      .search-box {
-        display: flex;
-        align-items: center;
-      }
-
-      .search-input {
-        padding: 8px 15px;
-        border-radius: 20px;
-        border: 1px solid #ddd;
-        outline: none;
-        width: 200px;
-        transition: all 0.3s ease;
-      }
-
-      .search-input:focus {
-        width: 250px;
-        border-color: var(--primary);
-      }
-
-      .search-btn {
-        background: none;
-        border: none;
-        cursor: pointer;
-        margin-left: -35px;
-        color: #777;
-      }
-
+      /* 搜索相关样式 */
       .search-results {
         position: absolute;
         top: 100%;
-        right: 0;
-        width: 400px;
-        max-height: 500px;
+        left: 0;
+        width: 100%;
+        max-height: 400px;
         overflow-y: auto;
-        background: white;
-        border-radius: 10px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        background: var(--card-bg);
+        border-radius: 0 0 15px 15px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         z-index: 1000;
         display: none;
         padding: 15px;
-        margin-top: 10px;
-      }
-
-      .search-results-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 10px;
-        padding-bottom: 10px;
-        border-bottom: 1px solid #eee;
       }
 
       .search-result-item {
-        padding: 10px;
-        margin-bottom: 10px;
-        border-radius: 5px;
-        transition: background 0.2s;
+        padding: 12px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        transition: all 0.2s ease;
       }
 
       .search-result-item:hover {
-        background: #f5f5f5;
+        background: rgba(0, 0, 0, 0.02);
       }
 
       .search-result-title {
@@ -273,37 +239,32 @@
 
       .search-result-excerpt {
         font-size: 0.9rem;
-        color: #666;
+        color: var(--text-light);
         margin-bottom: 5px;
       }
 
       .search-result-source {
         font-size: 0.8rem;
-        color: #999;
+        color: var(--text-lighter);
       }
 
       .highlight {
-        background-color: yellow;
-        font-weight: bold;
+        background-color: rgba(255, 235, 59, 0.3);
+        padding: 0 2px;
+        border-radius: 2px;
       }
 
-      .no-results {
-        padding: 20px;
-        text-align: center;
-        color: #666;
+      .search-highlight {
+        animation: highlightFade 2s ease-out;
+        background-color: rgba(255, 235, 59, 0.5);
       }
 
-      .close-search {
-        background: none;
-        border: none;
-        cursor: pointer;
-        color: #999;
-      }
-
-      @media (max-width: 768px) {
-        .search-results {
-          width: 300px;
-          right: -50px;
+      @keyframes highlightFade {
+        0% {
+          background-color: rgba(255, 235, 59, 0.8);
+        }
+        100% {
+          background-color: rgba(255, 235, 59, 0);
         }
       }
     </style>
@@ -384,50 +345,67 @@
     </footer>
 
     <script>
+      // 页面加载完成后执行初始化
       document.addEventListener("DOMContentLoaded", function () {
+        // 缓存常用DOM元素
         const searchInput = document.getElementById("searchInput");
         const searchBtn = document.getElementById("searchBtn");
         const searchResults = document.getElementById("searchResults");
         const resultsContainer = document.getElementById("resultsContainer");
         const closeSearch = document.getElementById("closeSearch");
+        const contentContainer = document.getElementById("contentContainer");
 
+        // 要搜索的页面列表
         const pagesToSearch = ["index.html", "about.html", "dh.html"];
+
+        // 文章数据缓存（避免重复请求）
         let articlesCache = null;
 
+        // 检查URL中是否有高亮标记
+        checkUrlForHighlight();
+
+        // 从DOM解析文章数据
         function parseArticles(htmlContent, pageUrl) {
           const parser = new DOMParser();
           const doc = parser.parseFromString(htmlContent, "text/html");
 
-          return Array.from(doc.querySelectorAll(".card")).map((card, index) => {
-            const title = card.querySelector("h2")?.textContent || "无标题";
-            const content = Array.from(card.querySelectorAll("p"))
-              .map((p) => p.textContent)
-              .join(" ");
+          return Array.from(doc.querySelectorAll(".card")).map(
+            (card, index) => {
+              const title = card.querySelector("h2")?.textContent || "无标题";
+              const content = Array.from(card.querySelectorAll("p"))
+                .map((p) => p.textContent)
+                .join(" ");
 
-            return {
-              id: card.id || `card-${index}`,
-              title,
-              content,
-              url: pageUrl,
-              excerpt:
-                content.substring(0, 100) + (content.length > 100 ? "..." : ""),
-            };
-          });
+              return {
+                id: card.id || `card-${index}`,
+                title,
+                content,
+                url: pageUrl,
+                excerpt:
+                  content.substring(0, 100) +
+                  (content.length > 100 ? "..." : ""),
+              };
+            }
+          );
         }
 
+        // 获取所有文章数据（带缓存）
         async function getAllArticles() {
+          // 如果缓存存在且有效，直接返回
           if (articlesCache) return articlesCache;
 
           let allArticles = [];
           const currentPage =
             window.location.pathname.split("/").pop() || "index.html";
 
+          // 获取当前页面的文章
           const currentPageArticles = parseArticles(
             document.documentElement.outerHTML,
             currentPage
           );
           allArticles = [...currentPageArticles];
 
+          // 获取其他页面的文章
           const fetchPromises = pagesToSearch
             .filter((page) => page !== currentPage)
             .map(async (page) => {
@@ -443,9 +421,11 @@
               }
             });
 
+          // 并行获取所有页面
           const results = await Promise.all(fetchPromises);
           results.forEach((articles) => allArticles.push(...articles));
 
+          // 缓存结果（5分钟有效期）
           articlesCache = allArticles;
           setTimeout(() => {
             articlesCache = null;
@@ -454,6 +434,7 @@
           return allArticles;
         }
 
+        // 执行搜索（带防抖）
         const performSearch = debounce(async function () {
           const query = searchInput.value.trim().toLowerCase();
 
@@ -462,6 +443,7 @@
             return;
           }
 
+          // 显示加载状态
           resultsContainer.innerHTML = '<div class="no-results">搜索中...</div>';
           searchResults.style.display = "block";
 
@@ -476,6 +458,7 @@
           }
         }, 300);
 
+        // 文章过滤逻辑
         function filterArticles(articles, query) {
           return articles.filter(
             (article) =>
@@ -484,6 +467,7 @@
           );
         }
 
+        // 显示搜索结果
         function displayResults(results) {
           resultsContainer.innerHTML = "";
 
@@ -498,7 +482,7 @@
             const resultItem = document.createElement("div");
             resultItem.className = "search-result-item";
             resultItem.innerHTML = `
-              <a href="${article.url}#${article.id}" class="search-result-link" style="text-decoration: none; color: inherit;">
+              <a href="${article.url}#${article.id}" class="search-result-link" data-id="${article.id}" data-page="${article.url}">
                 <div class="search-result-title">${highlightText(
                   article.title,
                   searchInput.value
@@ -513,9 +497,64 @@
             resultsContainer.appendChild(resultItem);
           });
 
+          // 添加点击事件监听
+          document.querySelectorAll('.search-result-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+              e.preventDefault();
+              const targetPage = this.getAttribute('data-page');
+              const targetId = this.getAttribute('data-id');
+              
+              if (targetPage === window.location.pathname.split('/').pop() || 
+                  (targetPage === 'index.html' && window.location.pathname.endsWith('/'))) {
+                // 当前页面，直接滚动到目标位置
+                scrollToElement(targetId, searchInput.value);
+                searchResults.style.display = 'none';
+              } else {
+                // 其他页面，保存搜索词并跳转
+                sessionStorage.setItem('searchHighlight', searchInput.value);
+                sessionStorage.setItem('scrollTo', targetId);
+                window.location.href = this.getAttribute('href');
+              }
+            });
+          });
+
           searchResults.style.display = "block";
         }
 
+        // 滚动到指定元素并高亮
+        function scrollToElement(elementId, highlightText) {
+          const element = document.getElementById(elementId);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+            
+            // 高亮显示匹配文本
+            if (highlightText) {
+              highlightElementText(element, highlightText);
+            }
+          }
+        }
+
+        // 高亮元素中的文本
+        function highlightElementText(element, text) {
+          const escapedText = text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          const regex = new RegExp(escapedText, 'gi');
+          
+          // 临时移除动画类
+          element.classList.remove('search-highlight');
+          
+          // 触发重绘
+          void element.offsetWidth;
+          
+          // 添加动画类
+          element.classList.add('search-highlight');
+          
+          // 3秒后移除动画类
+          setTimeout(() => {
+            element.classList.remove('search-highlight');
+          }, 2000);
+        }
+
+        // 高亮显示匹配文本
         function highlightText(text, query) {
           if (!query) return text;
 
@@ -528,32 +567,30 @@
           );
         }
 
-        function handleSearchResultClick(e) {
-          e.preventDefault();
+        // 检查URL中是否有高亮标记
+        function checkUrlForHighlight() {
+          const hash = window.location.hash.substring(1);
+          const searchHighlight = sessionStorage.getItem('searchHighlight');
+          const scrollTo = sessionStorage.getItem('scrollTo');
           
-          const link = e.target.closest(".search-result-link");
-          if (!link) return;
-          
-          const href = link.getAttribute("href");
-          const [page, hash] = href.split("#");
-          
-          if (page === window.location.pathname.split("/").pop() || 
-              (page === "index.html" && window.location.pathname.endsWith("/"))) {
-            const section = document.getElementById(hash);
-            if (section) {
-              window.scrollTo({
-                top: section.offsetTop - 100,
-                behavior: "smooth"
-              });
-            }
-          } else {
-            window.location.href = href;
+          if (scrollTo && scrollTo === hash) {
+            // 清除存储的值
+            sessionStorage.removeItem('searchHighlight');
+            sessionStorage.removeItem('scrollTo');
+            
+            // 滚动到目标位置并高亮
+            setTimeout(() => {
+              scrollToElement(scrollTo, searchHighlight);
+            }, 300);
+          } else if (hash) {
+            // 普通锚点跳转
+            setTimeout(() => {
+              scrollToElement(hash);
+            }, 300);
           }
-          
-          searchResults.style.display = "none";
-          searchInput.value = "";
         }
 
+        // 防抖函数
         function debounce(func, delay) {
           let timer;
           return function () {
@@ -562,18 +599,19 @@
           };
         }
 
+        // 事件监听
         searchBtn.addEventListener("click", performSearch);
         searchInput.addEventListener("input", performSearch);
         searchInput.addEventListener("keypress", function (e) {
           if (e.key === "Enter") performSearch();
         });
-        
-        closeSearch.addEventListener("click", function() {
+
+        closeSearch.addEventListener("click", function(e) {
+          e.stopPropagation();
           searchResults.style.display = "none";
         });
-        
-        resultsContainer.addEventListener("click", handleSearchResultClick);
 
+        // 点击页面其他地方关闭搜索结果
         document.addEventListener("click", function (e) {
           if (
             !e.target.closest(".search-container") &&
