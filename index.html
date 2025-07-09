@@ -14,9 +14,7 @@
       href="https://img.zmal.top/frined/57de5ad8ef1705f8fc15a83aa4de2706_720.4ub7p2t8cl.jpg"
       type="image/x-icon"
     />
-    <link rel="stylesheet" href="./css/search.css" />
     <style>
-      /* 文章列表样式 */
       .article-list {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -80,27 +78,299 @@
         box-shadow: 0 4px 10px rgba(125, 157, 202, 0.3);
       }
 
-      /* 主要内容区 */
       .container {
         max-width: 1000px;
-        margin: 40px auto;
+        margin: 60px auto 40px;
         padding: 0 30px;
         flex: 1;
       }
-      footer {
+
+      h1 {
+        font-size: 2.8rem;
+        margin-bottom: 40px;
+        font-weight: 300;
         text-align: center;
-        padding: 30px 0;
-        color: var(--text-light);
-        font-size: 14px;
-        background-color: var(--card-bg);
-        border-top-left-radius: 20px;
-        border-top-right-radius: 20px;
-        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.03);
-        margin-top: 50px;
+        color: var(--primary);
+        position: relative;
+        display: inline-block;
+        left: 50%;
+        transform: translateX(-50%);
+        padding-top: 20px;
       }
 
-      footer p {
+      h1::after {
+        content: "";
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary), var(--highlight));
+        border-radius: 3px;
+      }
+
+      .card {
+        background: var(--card-bg);
+        padding: 40px;
+        margin-bottom: 30px;
+        border-radius: 20px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(0, 0, 0, 0.03);
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .card h2 {
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+        color: var(--primary);
+        position: relative;
+        padding-bottom: 10px;
+      }
+
+      .card h2::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background-color: var(--highlight);
+        border-radius: 3px;
+      }
+
+      .card p {
+        margin-bottom: 20px;
+        font-size: 1.1rem;
+        color: var(--text-light);
+        line-height: 1.8;
+      }
+
+      @media (max-width: 768px) {
+        .card h2 {
+          font-size: 1.5rem;
+          margin-bottom: 15px;
+          line-height: 1.4;
+        }
+
+        .card p {
+          font-size: 1.05rem;
+          margin-bottom: 18px;
+          line-height: 1.75;
+        }
+
+        .article-list {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .article-item {
+        animation: fadeIn 0.4s ease forwards;
+        opacity: 0;
+      }
+
+      .title-container {
+        margin-top: 30px;
+        margin-bottom: 20px;
+      }
+
+      @media (max-width: 768px) {
+        .title-container {
+          margin-top: 40px;
+          margin-bottom: 15px;
+        }
+      }
+
+      /* 新增搜索相关样式 */
+      .search-container {
+        position: relative;
+        margin-left: auto;
+      }
+
+      .search-box {
+        display: flex;
+        align-items: center;
+      }
+
+      .search-input {
+        padding: 8px 15px;
+        border-radius: 20px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        width: 200px;
+        transition: all 0.3s ease;
+      }
+
+      .search-input:focus {
+        outline: none;
+        width: 250px;
+        border-color: var(--primary);
+      }
+
+      .search-btn {
+        background: none;
+        border: none;
+        margin-left: -30px;
+        cursor: pointer;
+        color: var(--primary);
+      }
+
+      .search-results {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--card-bg);
+        border-radius: 0 0 10px 10px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        max-height: 400px;
+        overflow-y: auto;
+        z-index: 1000;
+        display: none;
+        padding: 10px;
+      }
+
+      .search-results-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 10px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      }
+
+      .search-results-header h3 {
         margin: 0;
+        font-size: 1rem;
+        color: var(--primary);
+      }
+
+      .close-search {
+        background: none;
+        border: none;
+        color: #888;
+        cursor: pointer;
+      }
+
+      .search-result-item {
+        padding: 10px;
+        margin-bottom: 5px;
+        border-radius: 5px;
+        transition: all 0.2s ease;
+        cursor: pointer;
+      }
+
+      .search-result-item:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+
+      .search-result-title {
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: var(--primary);
+      }
+
+      .search-result-excerpt {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 5px;
+      }
+
+      .search-result-source {
+        font-size: 0.8rem;
+        color: #888;
+      }
+
+      .no-results {
+        padding: 15px;
+        text-align: center;
+        color: var(--text-light);
+      }
+
+      .highlight {
+        background-color: #ffeb3b;
+        font-weight: bold;
+        padding: 0 2px;
+        border-radius: 2px;
+      }
+
+      /* 导航栏样式恢复 */
+      #mainHeader nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      #mainHeader nav ul {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      #mainHeader nav ul li {
+        margin: 0 15px;
+      }
+
+      #mainHeader nav ul li a {
+        color: var(--text);
+        text-decoration: none;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        padding: 5px 10px;
+        border-radius: 5px;
+      }
+
+      #mainHeader nav ul li a:hover,
+      #mainHeader nav ul li a.active {
+        color: var(--primary);
+        background-color: rgba(125, 157, 202, 0.1);
+      }
+
+      @media (max-width: 768px) {
+        #mainHeader nav {
+          flex-direction: column;
+          padding: 10px;
+        }
+        
+        #mainHeader nav ul {
+          position: static;
+          transform: none;
+          margin: 10px 0;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+        
+        .search-container {
+          margin-left: 0;
+          width: 100%;
+          margin-top: 10px;
+        }
+        
+        .search-input {
+          width: 100%;
+        }
       }
     </style>
   </head>
@@ -133,9 +403,7 @@
                   <i class="fas fa-times"></i>
                 </button>
               </div>
-              <div class="article-list" id="resultsContainer">
-                <!-- 搜索结果将在这里显示为卡片 -->
-              </div>
+              <div id="resultsContainer"></div>
             </div>
           </div>
         </div>
@@ -250,13 +518,13 @@
           const query = searchInput.value.trim().toLowerCase();
           
           if (!query) {
-            searchResults.classList.remove("show");
+            searchResults.style.display = "none";
             return;
           }
 
           // 显示加载状态
           resultsContainer.innerHTML = '<div class="no-results">搜索中...</div>';
-          searchResults.classList.add("show");
+          searchResults.style.display = "block";
 
           try {
             const articles = await getAllArticles();
@@ -301,18 +569,18 @@
             
             // 添加点击事件
             resultItem.addEventListener("click", function() {
-                if (article.url === window.location.pathname.split("/").pop() || 
-                    (article.url === "index.html" && window.location.pathname.endsWith("/"))) {
-                    // 当前页面，滚动到对应位置
-                    const element = document.getElementById(article.id);
-                    if (element) {
-                        element.scrollIntoView({ behavior: "smooth" });
-                    }
-                } else {
-                    // 其他页面，跳转并添加hash
-                    window.location.href = `${article.url}#${article.id}`;
+              if (article.url === window.location.pathname.split("/").pop() || 
+                  (article.url === "index.html" && window.location.pathname.endsWith("/"))) {
+                // 当前页面，滚动到对应位置
+                const element = document.getElementById(article.id);
+                if (element) {
+                  element.scrollIntoView({ behavior: "smooth" });
                 }
-                searchResults.classList.remove("show");
+              } else {
+                // 其他页面，跳转并添加hash
+                window.location.href = `${article.url}#${article.id}`;
+              }
+              searchResults.style.display = "none";
             });
             
             resultsContainer.appendChild(resultItem);
@@ -346,7 +614,7 @@
           if (e.key === "Enter") performSearch();
         });
         closeSearch.addEventListener("click", () => {
-          searchResults.classList.remove("show");
+          searchResults.style.display = "none";
         });
 
         // 点击页面其他地方关闭搜索结果
@@ -355,9 +623,24 @@
             !e.target.closest(".search-container") &&
             !e.target.closest(".search-results")
           ) {
-            searchResults.classList.remove("show");
+            searchResults.style.display = "none";
           }
         });
+
+        // 检查URL hash并滚动到对应位置
+        function checkHashAndScroll() {
+          if (window.location.hash) {
+            const element = document.getElementById(window.location.hash.substring(1));
+            if (element) {
+              setTimeout(() => {
+                element.scrollIntoView({ behavior: "smooth" });
+              }, 100);
+            }
+          }
+        }
+
+        // 页面加载时检查hash
+        checkHashAndScroll();
       });
     </script>
   </body>
